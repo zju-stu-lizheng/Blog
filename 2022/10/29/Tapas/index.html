@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zju-stu-lizheng.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/project/js/config.js"></script>
 
-    <meta name="description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一">
+    <meta name="description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一种不生成逻">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tapas">
 <meta property="og:url" content="https://zju-stu-lizheng.github.io/project/2022/10/29/Tapas/index.html">
 <meta property="og:site_name" content="Liodb&#39;s Blog">
-<meta property="og:description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一">
+<meta property="og:description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一种不生成逻">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png">
 <meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png">
@@ -223,8 +223,8 @@
     
     <div class="post-body" itemprop="articleBody">
         <blockquote>
-<p>论文标题：[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.02349">2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org)</a></p>
-<p>code:<a target="_blank" rel="noopener" href="https://github.com/google-research/tapas">google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)</a></p>
+<p>论文标题：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.02349">[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org)</a></p>
+<p>code:<a target="_blank" rel="noopener" href="https://github.com/google-research/tapas">google-research/tapas: End-to-end neural table-text understanding models. (github.com)</a></p>
 </blockquote>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p><code>TAPAS</code>是一种不生成逻辑形式来解决【表问答】（Table Q&amp;A）问题的方法。它基于弱监督的方式，通过应用相应的聚合操作符来选择表单元格来进行预测。</p>
 <p>在三种语义解析数据集上，<strong>SQA</strong>,<strong>WIKISQL</strong>,<strong>WIKITQ</strong>均取得了较好的结果。</p>
@@ -245,7 +245,7 @@
 <ul>
 <li>Position ID</li>
 <li>Segment ID</li>
-<li>Column &#x2F; Row ID</li>
+<li>Column / Row ID</li>
 <li>Rank ID：对可以解析成浮点数或日期的列值进行排序</li>
 <li>Previous Answer</li>
 </ul>
@@ -277,7 +277,7 @@
 <h1 id="4-Fine-tuning"><a href="#4-Fine-tuning" class="headerlink" title="4 Fine-tuning"></a>4 Fine-tuning</h1><h3 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h3><ul>
 <li>我们在弱监督设置中正式定义表解析：</li>
 </ul>
-<p>给定一个含N个例子的训练集 ${(x_i,T_i,y_i)}_{i&#x3D;1}^N$，其中，$x_i$是一个语句（utterance)，$T_i$是一张表，$y_i$是一组相应的表示。我们的目的是学习一个模型，能够将语句<em>x</em>映射到一段程序<em>z</em>，其中<em>z</em>作用在对应的表<em>T</em>上可以得到正确的表示<em>y</em></p>
+<p>给定一个含N个例子的训练集 $\{(x_i,T_i,y_i)\}_{i=1}^N$，其中，$x_i$是一个语句（utterance)，$T_i$是一张表，$y_i$是一组相应的表示。我们的目的是学习一个模型，能够将语句<em>x</em>映射到一段程序<em>z</em>，其中<em>z</em>作用在对应的表<em>T</em>上可以得到正确的表示<em>y</em></p>
 <p>这段程序<em>z</em>包括一个表单元格的子集和一个可选的聚合运算符。表<em>T</em>将一个表单元格映射到它的值。</p>
 <ul>
 <li>在具体实现时，我们把表示<em>y</em>翻译成(C,s),其中C是单元格坐标，s是一个标量。我们可以根据(C,s)的内容指导训练：<ol>
@@ -286,12 +286,7 @@
 </ol>
 </li>
 </ul>
-<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png" alt="image-20221002163526787"  />
-
-
-
-
-
+<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png" alt="image-20221002163526787"  /></p>
 <p>另外，TAPAS把Table QA问题分为了三类： </p>
 <ol>
 <li><p>cell selection：可以通过选择表中若干单元格解决问题</p>

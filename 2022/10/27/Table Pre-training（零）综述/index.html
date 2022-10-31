@@ -20,12 +20,12 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"zju-stu-lizheng.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/project/js/config.js"></script>
 
-    <meta name="description" content="Table Pre-training A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks  SOTA result：state-of-the-art result，指的是在该项研究任务中，目前最好的模型的结果&#x2F;性能&#x2F;表现。 T5 : Transfer Text-to-Tex">
+    <meta name="description" content="Table Pre-training A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks  SOTA result：state-of-the-art result，指的是在该项研究任务中，目前最好的模型的结果&#x2F;性能&#x2F;表现。 T5 : Transfer Text-to-Text Transfor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Table Pre-training（零）综述">
 <meta property="og:url" content="https://zju-stu-lizheng.github.io/project/2022/10/27/Table%20Pre-training%EF%BC%88%E9%9B%B6%EF%BC%89%E7%BB%BC%E8%BF%B0/index.html">
 <meta property="og:site_name" content="Liodb&#39;s Blog">
-<meta property="og:description" content="Table Pre-training A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks  SOTA result：state-of-the-art result，指的是在该项研究任务中，目前最好的模型的结果&#x2F;性能&#x2F;表现。 T5 : Transfer Text-to-Tex">
+<meta property="og:description" content="Table Pre-training A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks  SOTA result：state-of-the-art result，指的是在该项研究任务中，目前最好的模型的结果&#x2F;性能&#x2F;表现。 T5 : Transfer Text-to-Text Transfor">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-10-27T07:26:53.000Z">
 <meta property="article:modified_time" content="2022-10-31T02:07:01.567Z">
@@ -222,7 +222,7 @@
         <h1 id="Table-Pre-training"><a href="#Table-Pre-training" class="headerlink" title="Table Pre-training"></a>Table Pre-training</h1><blockquote>
 <p>A Survey on Model Architectures, Pre-training Objectives, and Downstream Tasks</p>
 </blockquote>
-<p><strong>SOTA</strong> <strong>result</strong>：state-of-the-art result，指的是在该项研究任务中，目前最好的模型的结果&#x2F;性能&#x2F;表现。</p>
+<p><strong>SOTA</strong> <strong>result</strong>：state-of-the-art result，指的是在该项研究任务中，目前最好的模型的结果/性能/表现。</p>
 <p>T5 : <strong>Transfer Text-to-Text Transformer</strong></p>
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>随着预训练范式在自然语言领域的成功，一系列表预训练框架被提出，并在各种下游任务上取得了新的技术水平，如表问答、表类型识别、表关系分类、表搜索和公式预测。</p>
 <p>为了最好地利用结构化表的特性，人们探索了各种模型架构，特别是【单独设计的注意机制】(specially-designed attention mechanisms)。</p>
@@ -250,7 +250,7 @@
 </ul>
 <p>在进行任何更高层次的信息检索之前，都需要对它们进行数字化。</p>
 <p>在本文中，我们主要关注<strong>半结构表</strong>和<strong>结构良好的表</strong>。我们忽略了图像表，因为它们有明显的视觉挑战，并且希望单独讨论。</p>
-<h3 id="2-1-Table-Structure"><a href="#2-1-Table-Structure" class="headerlink" title="2.1 Table Structure"></a>2.1 Table Structure</h3><p>表是灵活的各种结构，包括关系表、实体表、矩阵表、布局表、表单等。它们也具有方向（水平&#x2F;垂直方向）和层次结构（平面&#x2F;层次结构）。</p>
+<h3 id="2-1-Table-Structure"><a href="#2-1-Table-Structure" class="headerlink" title="2.1 Table Structure"></a>2.1 Table Structure</h3><p>表是灵活的各种结构，包括关系表、实体表、矩阵表、布局表、表单等。它们也具有方向（水平/垂直方向）和层次结构（平面/层次结构）。</p>
 <p>平面关系表的结构在类似数据库的形式中是明确和直接的，其中每一行是一条记录，每列是一个字段，没有层次结构。</p>
 <p>一个实体表只需记录一个实体及其属性。矩阵表同时具有水平方向和垂直方向。</p>
 <h3 id="2-2-Cell-Information"><a href="#2-2-Cell-Information" class="headerlink" title="2.2 Cell Information"></a>2.2 Cell Information</h3><p>通常，单元格（cell）是表中一行和一列的交点。多个单元格可以合并成一个占据多行和列的更大单元格。单元格是记录文本、数值、格式、公式等的基本单位。</p>
@@ -269,12 +269,12 @@
 </ul>
 <h2 id="3-Model"><a href="#3-Model" class="headerlink" title="3 Model"></a>3 Model</h2><p>由于二维信息对于理解表结构至关重要，许多神经结构被提出来联合捕获结构和语义信息。</p>
 <ul>
-<li>Table2Vec:采用 skip-gram 神经网络模型来训练具有行&#x2F;列填充的单词嵌入</li>
+<li>Table2Vec:采用 skip-gram 神经网络模型来训练具有行/列填充的单词嵌入</li>
 <li>CNN：获取在二维表中的空间信息</li>
-<li>Bidirectional RNN&#x2F;LSTM ：获取行&#x2F;列的顺序</li>
+<li>Bidirectional RNN/LSTM ：获取行/列的顺序</li>
 <li>GNN：表的理解与问答</li>
 </ul>
-<p>尽管上述模型已经广泛地运用在表的建模上，但是它们并不适用于大规模表的预训练。主要原因是它们中的大多数分开训练（或直接消耗）标记&#x2F;单词嵌入，从而限制了模型理解单元格文本和表结构的能力。</p>
+<p>尽管上述模型已经广泛地运用在表的建模上，但是它们并不适用于大规模表的预训练。主要原因是它们中的大多数分开训练（或直接消耗）标记/单词嵌入，从而限制了模型理解单元格文本和表结构的能力。</p>
 <p>最近，一系列的研究探索了使用基于Transformer的语言模型（LMs）进行表格预训练，我们称之为表格语言模型（TaLMs）。</p>
 <p>使用Transformer的优点是，它们可以联合地预训练语义和结构表示，并继承现有的NL预训练模型的文本理解能力，如BERT。</p>
 <p>UnifiedSKG和TableGPT等工作，没有特定表的预训练，直接微调表任务，取得了有效的，甚至SOTA的结果，表明预训练可以从文本转移到表，例如，在语言和世界知识方面。</p>
@@ -285,14 +285,10 @@
 </li>
 <li><p>在TaPEx中，表依然被逐行线性化，但是它插入了若干特殊令牌来描述表的组件，例如[HEAD],[ROW]分别表示表头和行的区域。</p>
 </li>
-<li><p>TABBIE为两个Tranformer分别按行和列线性化表。</p>
-</li>
-<li><p>yTableGPT在相对简单的表上明显采用了基于模板的表序列化方法。</p>
-</li>
-<li><p>UnifiedSKG进行的实验表明，将外部文本（如问题）放在表格前面可以帮助<code>T5</code>在表格任务上更好地概括</p>
-</li>
-<li><p>一些工作将表的特定部分进行线性化，例如，TaBERT将最相关的行线性化到输入语句中，而StruG和GraPPa只将头作为输入，没有数据单元。</p>
-</li>
+<li>TABBIE为两个Tranformer分别按行和列线性化表。</li>
+<li>yTableGPT在相对简单的表上明显采用了基于模板的表序列化方法。</li>
+<li>UnifiedSKG进行的实验表明，将外部文本（如问题）放在表格前面可以帮助<code>T5</code>在表格任务上更好地概括</li>
+<li>一些工作将表的特定部分进行线性化，例如，TaBERT将最相关的行线性化到输入语句中，而StruG和GraPPa只将头作为输入，没有数据单元。</li>
 </ul>
 <h3 id="3-2-Input-Featurization-and-Embedding"><a href="#3-2-Input-Featurization-and-Embedding" class="headerlink" title="3.2 Input Featurization and Embedding"></a>3.2 Input Featurization and Embedding</h3><h4 id="Cell-Text-Encoding"><a href="#Cell-Text-Encoding" class="headerlink" title="Cell Text Encoding"></a>Cell Text Encoding</h4><ul>
 <li>大多数表预训练方法使用WordPiece和学习到的标记嵌入来标记单元格文本，例如TaBERT,TaPas,MATE…</li>
@@ -302,8 +298,8 @@
 </ul>
 <h4 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h4><p>在NL预训练的模型之后，大多数TaLM在序列化的表格序列中嵌入一维序列位置，例如，TaPas、MATE、StruG、GraPPa和TaPEx。</p>
 <p>其他一些工作将整个序列划分为多个片段，分别计算每个单元中的位置： TUTA将每个单元作为一个独立的片段，并处理单元内标记的局部编码位置信息；TURL将表标题和标题视为两个独立的部分，然后使用两个局部位置编码。</p>
-<p>表中还具有二维的行&#x2F;列和层次结构信息。诸如TaPa、MATE和TUTA等工作，学习了基于列&#x2F;行id的列&#x2F;行嵌入，并显示出了更高的性能。</p>
-<p>然而，考虑到层次结构，列&#x2F;行编码只能提供有限的表示能力。TUTA进一步设计了基于显式&#x2F;隐式树的位置嵌入来联合编码空间和层次位置，并在一般结构化的表上显示出显著的有效性。然而，它对只涉及平面表和关系表的下游任务没有帮助。</p>
+<p>表中还具有二维的行/列和层次结构信息。诸如TaPa、MATE和TUTA等工作，学习了基于列/行id的列/行嵌入，并显示出了更高的性能。</p>
+<p>然而，考虑到层次结构，列/行编码只能提供有限的表示能力。TUTA进一步设计了基于显式/隐式树的位置嵌入来联合编码空间和层次位置，并在一般结构化的表上显示出显著的有效性。然而，它对只涉及平面表和关系表的下游任务没有帮助。</p>
 <h4 id="Numerical-Encoding"><a href="#Numerical-Encoding" class="headerlink" title="Numerical Encoding"></a>Numerical Encoding</h4><p>大量的数值分布在表中，并为基于BERT的模型提出了学习最优表示的挑战，因为这些方法只是简单地以与NL文本相同的方式对数值进行标记化和编码。</p>
 <p>它将数字的原始记录结构破坏成碎片，并引入了数字表示方面的困难。</p>
 <p>最近，在NLP领域，对学习更好的数字表示的探索激增，而在表格数据方面很少尝试。TaPas和MATE设计了一个独特的排名嵌入为列数比较，在回答比较或最高级问题方面带来了改进。</p>
