@@ -117,12 +117,20 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/project/archives/">
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zju-stu-lizheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zju-stu-lizheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizheng.cs@zju.edu.cn" title="E-Mail → mailto:lizheng.cs@zju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
 
 
 
@@ -156,7 +164,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/29/Table%20Pre-training%EF%BC%88%E9%9B%B6%EF%BC%89%E7%BB%BC%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/31/TUTA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/project/images/avatar.gif">
@@ -174,7 +182,355 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/project/2022/10/29/Table%20Pre-training%EF%BC%88%E9%9B%B6%EF%BC%89%E7%BB%BC%E8%BF%B0/" class="post-title-link" itemprop="url">Table Pre-training（零）综述</a>
+          <a href="/project/2022/10/31/TUTA/" class="post-title-link" itemprop="url">TUTA</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2022-10-31 09:26:53 / Modified: 10:18:45" itemprop="dateCreated datePublished" datetime="2022-10-31T09:26:53+08:00">2022-10-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2010.12537.pdf">TUTA: Tree-based Transformers for Generally Structured Table Pre-training (arxiv.org)</a></p>
+<p>code：<a target="_blank" rel="noopener" href="https://github.com/microsoft/TUTA_table_understanding">microsoft/TUTA_table_understanding(github.com)</a></p>
+</blockquote>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>近期对表理解的尝试主要集中在关系表上，而忽略了其它的表结构。</p>
+<p>本文提出了一个统一的，用于理解一般结构化表的预训练架构——<strong>TUTA</strong>.</p>
+<p>在该架构中，为理解空间、层次结构以及语义信息，我们使用三种新奇的结构感知机制改进Transformer：</p>
+<ol>
+<li>设计了一种统一的基于树的结构——二维坐标树，并用来描述一般结构化表的空间信息和层次信息</li>
+<li>提出了基于树的注意机制和位置嵌入来更好地捕获空间和层次信息</li>
+<li>设计了三个渐进的预训练目标，以实现在token、cell和table级别上的表示</li>
+</ol>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>不同于自然语言文本，表格通常以二维矩阵的形式组织单元格，并且具有诸如边界、合并、对齐、粗体等风格的格式，以下是四种不同风格的表格：</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221005230454553.png" alt="图1 四种不同风格的表格"></p>
+<p>表理解任务包括实体链接、列类型标识、回答表上的自然语言问题以及为表生成数据分析。然而目前的工作只聚焦在关系表上，这些关系表只占一般web表的0.9%。这导致了前沿表理解技术和各种结构的现实世界表之间的很大的差距。</p>
+<ul>
+<li>诸多尝试通过识别表的层次结构和单元格类型，从各种结构化的表中提取关系数据。不过，为结构化信息打标签是件非常耗时费力的事，<strong>标签短缺</strong>给机器学习方法带来了巨大挑战。</li>
+<li>由于大规模预训练语言模型在许多自然语言任务中的成功，缓解<strong>标签短缺</strong>挑战的一个有效方法是在大量未标签表上进行<strong>自监督预训练</strong></li>
+</ul>
+<h3 id="预训练语言模型"><a href="#预训练语言模型" class="headerlink" title="预训练语言模型"></a>预训练语言模型</h3><ul>
+<li><strong>TABERT</strong>与<strong>TAPAS</strong>通过对表及其文本描述的联合预训练，通过关系表回答目标问题。</li>
+<li><strong>TURL</strong>尝试在关系表上预训练嵌入信息来增强表知识匹配与表扩充。</li>
+</ul>
+<p>然而，由于结构简单的原因，这些预训练方法仍然只针对关系web表。在关系表中，每一列是异构的，并且由一个列名描述，因此<strong>TABERT</strong>使用相应的列名来扩充每个数据单元格，<strong>TURL</strong>控制每个单元格仅从其行和列中聚合信息。</p>
+<hr>
+<p>因此，我们致力于提出一种结构感知的方法，完成一般结构表的预训练。</p>
+<p><strong>三个主要贡献</strong>：</p>
+<ol>
+<li>对于一般结构化的表，我们设计了一个<strong>二维树</strong>来定义一般结构化表中的单元格坐标和单元格距离。基于<strong>二维树</strong>，我们提出了<strong>TUTA</strong>，一种具有距离感知自注意的结构感知预训练方法。为了更好地结合空间和结构信息，我们设计了两种关键的技术，称为树的位置嵌入和基于树的注意，这在整个实验中被证明是非常有效的。</li>
+<li>我们在TUTA中采用了三种新的预训练任务，包括token级别的屏蔽语言模型（MLM）、cell级别的多选择完形填空（CLC）和table级别的上下文检索（TCR）。</li>
+<li>为了证明TUTA的有效性，我们在表结构理解中的两个关键任务上对预先训练好的模型进行了微调：cell类型分类（CTC）和table类型分类（TTC）。它在五个被广泛研究的数据集上达到了SOTA。</li>
+</ol>
+<h1 id="2-Preliminaries"><a href="#2-Preliminaries" class="headerlink" title="2 Preliminaries"></a>2 Preliminaries</h1><h3 id="2-1-Dataset-construction"><a href="#2-1-Dataset-construction" class="headerlink" title="2.1 Dataset construction"></a>2.1 Dataset construction</h3><p>增大容量与多样性的两种途径：</p>
+<ol>
+<li>结构上，除了关系表外，还包含其他结构，例如矩阵表</li>
+<li>文件类型上，还包括电子表格</li>
+</ol>
+<h3 id="2-2-Bi-dimensional-coordinate-tree"><a href="#2-2-Bi-dimensional-coordinate-tree" class="headerlink" title="2.2 Bi-dimensional coordinate tree"></a>2.2 Bi-dimensional coordinate tree</h3><h4 id="Tree-based-position"><a href="#Tree-based-position" class="headerlink" title="Tree-based position"></a>Tree-based position</h4><p>我们将二维坐标树定义为有向树，其中每个节点都有一个唯一的父节点和一个有序的有限子节点列表。</p>
+<ul>
+<li>它有两个正交的子树：一个top tree和一个left tree</li>
+<li>对于一个节点的位置，可以从它到top/left tree root的path中得到</li>
+<li>它的顶部和左节点的位置组合成一个唯一的二维树坐标。</li>
+</ul>
+<h4 id="Tree-based-distance"><a href="#Tree-based-distance" class="headerlink" title="Tree-based distance"></a>Tree-based distance</h4><p>我们定义把两个节点的<strong>top/left tree distance</strong>记为最短路径的步数。</p>
+<ul>
+<li><strong>bi-tree distance</strong>则是top tree distance与left tree distance之和</li>
+</ul>
+<p>另外，我们的二维坐标可以同时应用在层次表与扁平表。在扁平表上，树坐标退化为矩形笛卡尔坐标，并且同一行/列两个单元格的距离为2，否则为4。标题以及环绕的自然语言描述因为都是全局的信息，距离设置为0.</p>
+<h4 id="Tree-extraction"><a href="#Tree-extraction" class="headerlink" title="Tree extraction"></a>Tree extraction</h4><p>树提取包括两个步骤：(1)检测表中的header区域(2)从头中提取层次结构</p>
+<ol>
+<li>本文使用基于CNN的方法检测header</li>
+<li>本文基于人工格式的常见用法，整合了有效的启发式方法来提取header层次结构，例如顶部标题中的合并单元格和左侧标题中的缩进级别。</li>
+</ol>
+<h1 id="3-TUTA-Model"><a href="#3-TUTA-Model" class="headerlink" title="3 TUTA Model"></a>3 TUTA Model</h1><p>我们的TUTA模型基于BERT模型，主要在四方面进行了增强：</p>
+<ol>
+<li>在表语料库的通用源上构建第一个专用词汇表，以更好地在现实世界的表中编码通用token</li>
+<li>引入<strong>基于树的位置嵌入</strong>来联合 单元格位置以及header层次结构 的信息。</li>
+<li>提出一种结构感知注意机制，以促进结构相邻上下文的语义流</li>
+<li>设计三个预训练目标，逐步学习token、cell和table级别的表征。</li>
+</ol>
+<h3 id="3-1-Vocabulary-construction"><a href="#3-1-Vocabulary-construction" class="headerlink" title="3.1 Vocabulary construction"></a>3.1 Vocabulary construction</h3><p>与NL文档中的长文本不同，表格中的单元格字符串通常具有较短的长度和简洁的含义，构成了与NL文档中的非常不同的单词分布。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221006233201970.png" alt="image-20221006233201970"></p>
+<p>我们使用WordPiece模型构建了第一个表的专用词汇表，除了已经在BERT中的令牌之外，还获得了9,754个新令牌。</p>
+<h3 id="3-2-Embedding-layer"><a href="#3-2-Embedding-layer" class="headerlink" title="3.2 Embedding layer"></a>3.2 Embedding layer</h3><p>嵌入信息来自多个部分：in-table $E_{t_pos}$,in-cell $E_{c_pos}$,token semantics $E_{tok}$,numerical properties $E_{num}$,formatting features $E_{fmt}$</p>
+<h4 id="In-table-position"><a href="#In-table-position" class="headerlink" title="In-table position"></a>In-table position</h4><ul>
+<li>对于不同深度的树获得统一长度的坐标，我们将top/left tree坐标扩展到预定义的最大长度<strong>L</strong></li>
+</ul>
+<p><img src="TUTA.assets/image-20221007112457908.png" alt="TUTA概览图"></p>
+<hr>
+<h2 id="3-3-Tree-attention"><a href="#3-3-Tree-attention" class="headerlink" title="3.3 Tree attention"></a>3.3 Tree attention</h2><p>基于bi-tree坐标和距离，我们提出了<strong>基于树的attention</strong>。</p>
+<blockquote>
+<p>通用的Self-attention因允许每个token关注其它所有token，容易注意力发散。</p>
+<p>对于局部的cell而言，空间信息和层次化信息对<strong>去芜存菁</strong>非常重要。</p>
+</blockquote>
+<p>我们的目标就是设计一种结构感知的注意力机制。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221025211705024.png" alt="TUTA架构"></p>
+<p>结构感知的实现也很简单，就是添加一个可见性矩阵来实现masked attention：</p>
+<script type="math/tex; mode=display">
+BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一个对称矩阵，对于第i个token $tok_i$与它的邻域$SN_i$，当$tok_j \in SN_i$，设置$M_{i,j}=1$，否则$M_{i,j}=0$。邻域的定义是通过tree distance和一个预定义的阈值D得到的，当tree distance小于D认为两个cell是相邻的。</p>
+<h2 id="3-4-Pre-training-objectives"><a href="#3-4-Pre-training-objectives" class="headerlink" title="3.4 Pre-training objectives"></a>3.4 Pre-training objectives</h2><p>三个递进的级别：token,cell,table</p>
+<ol>
+<li>Masked language modeling（MLM）：对于token级别，我们采用在自然语言预训练中最常见的掩蔽语言建模目标。</li>
+<li>Cell-level Cloze（CLC）：对于cell级别，我们设计了cell完形填空目标。</li>
+<li>Table context retrieval（TCR)：对表上下文是否相关的判断。</li>
+</ol>
+<script type="math/tex; mode=display">
+\mathcal{L} = \mathcal{L_{mlm}}+\mathcal{L_{clc}}+\mathcal{L_{tcr}}</script><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221025213518065.png" alt="预训练任务示例"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/30/TURL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Liodb">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/project/2022/10/30/TURL/" class="post-title-link" itemprop="url">TURL</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-10-30 15:26:53" itemprop="dateCreated datePublished" datetime="2022-10-30T15:26:53+08:00">2022-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-10-31 10:18:41" itemprop="dateModified" datetime="2022-10-31T10:18:41+08:00">2022-10-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.14806.pdf">TURL: Table Understanding through Representation Learning (arxiv.org)</a></p>
+<p>code：<a target="_blank" rel="noopener" href="https://github.com/sunlab-osu/TURL">“TURL: Table Understanding through Representation Learning” (github.com)</a></p>
+</blockquote>
+<p><strong>词汇表征</strong>： Word representation </p>
+<p><strong>输入嵌入</strong>： Input Embedding</p>
+<p><strong>关系Web表</strong>：relational Web table，指在HTML代码的帮助下展现在网络上的具有行列结构的表格。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png" alt="关系Web表示例图"></p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>在本文中，我们提出了<strong>TURL</strong>，一个新的框架，它引入了关系Web表的预训练/微调范式。</p>
+<p>在预训练期间，我们的框架以一种无监督的方式学习关系Web表上的深度上下文表征。它的通用模型设计与预训练的表征可凭借最小的任务特定的微调应用于广泛的任务。</p>
+<p>具体来说，我们提出了一个【结构感知】（Structure-aware）的Transformer编码器来建模关系Web表的行-列结构，并提出了一个新的掩蔽实体恢复（MER）预训练目标，以捕获大规模未标记数据中的语义和知识。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>一方面，在关系Web表数据集上的工作通常依赖于复杂设计的特定于任务的方法，有着以下的缺点：</p>
+<ul>
+<li>简单的特性只捕获浅层模式，并且通常无法处理Web表中的灵活模式和各种表达式</li>
+<li>特定于任务的特性和模型架构需要努力进行设计，并且不能很好地跨任务进行泛化</li>
+</ul>
+<p>另一方面，预训练/微调范式在非结构化文本上取得了成功，但几乎没有扩展到对关系Web表这种范式研究上。</p>
+<p>此外，像Word2Vec这样的浅层神经模型的学习能力相对有限，这阻碍了对关系Web表中包含的复杂语义知识的捕获。</p>
+<p>综上所述，为填补空白，我们提出了新框架<strong>TURL</strong>，通过无监督方式的预训练和特定任务的微调来学习关系Web表上的深度上下文表征。</p>
+<p>两个主要挑战：</p>
+<ol>
+<li>Relational table encoding：挑战在于开发一种建模行和列结构的方法，以及集成来自表的不同组件的异构信息。</li>
+<li>Factual knowledge modeling：关系Web表包含大量关于实体的事实知识，现有的语言模型无法直接捕获</li>
+</ol>
+<h3 id="Relational-table-encoding"><a href="#Relational-table-encoding" class="headerlink" title="Relational table encoding"></a>Relational table encoding</h3><p>我们将来自不同表组件的信息编码到单独的输入嵌入中，并将它们融合在一起。接下来我们使用了带有掩码自监督的结构感知Transformer编码器。</p>
+<p>我们通过限制每个元素只聚合来自其他结构相关元素的信息，来显式地对行和列结构进行建模。为实现这一点，我们构建了一个基于表结构的可见性矩阵，并将其作为自注意层的附加掩模。</p>
+<h3 id="Factual-knowledge-modeling"><a href="#Factual-knowledge-modeling" class="headerlink" title="Factual knowledge modeling"></a>Factual knowledge modeling</h3><p>我们首先在预训练学习每个实体的嵌入。然后，我们在可见性矩阵的帮助下，对同一行或列中的实体之间的关系进行建模。</p>
+<p>最后，我们提出了一个掩蔽实体恢复（MER）预训练的目标。该技术随机屏蔽表中的实体，目的是基于其他实体和表上下文恢复屏蔽项。</p>
+<p>我们的贡献主要有以下三点：</p>
+<ol>
+<li>TURL是第一个向关系Web表引入预训练/微调范式的框架</li>
+<li>我们提出了一种结构感知的变压器编码器来建模关系Web表中的结构信息。我们还提出了一个新的屏蔽实体恢复（MER）预训练目标，以学习关系Web表中的语义和关于实体的事实知识。</li>
+<li>为了促进这个方向的研究，我们提出了一个包含6个不同任务的表解释和增强的基准。</li>
+</ol>
+<h1 id="2-Preliminary"><a href="#2-Preliminary" class="headerlink" title="2 Preliminary"></a>2 Preliminary</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003104405815.png" alt="表1 符号表"></p>
+<p>【定义一】给定一个关系Web表语料库，<strong>表征学习任务</strong>旨在以无监督的方式为所有Table caption 𝐶和Header 𝐻以及每个实体中的所有token（例如，所有实体单元𝐸和主题实体$e_t$）学习任务无关的上下文向量表征。</p>
+<h1 id="3-Related-Work"><a href="#3-Related-Work" class="headerlink" title="3 Related Work"></a>3 Related Work</h1><h3 id="Representation-Learning"><a href="#Representation-Learning" class="headerlink" title="Representation Learning"></a>Representation Learning</h3><p><code>Word2Vec</code>等工作在大规模文档上预训练分布式<strong>词汇表征</strong>，而词汇表征被广泛应用在<strong>输入嵌入</strong>中并取得了比随机初始化更优秀的表现。</p>
+<p>然而潜在的一词多义问题，即在不同语境中模拟不同的词汇使用，激发了<strong>上下文化词汇表征</strong>的发展。</p>
+<p>不同于学习每个词汇固定的嵌入，该工作建立了学习句子中联合分布概率的语言模型。这种语言模型在大量NLP任务中取得了SOTA的结果。</p>
+<hr>
+<p>在知识库（Knowledge Base)表征学习方面，<code>ERNIE</code>利用预训练知识库嵌入和去噪实体自动编码器目标，将知识库信息注入到预训练过的BERT模型中，实验结果表明这一操作对实体链接、关系提取等任务有效。</p>
+<hr>
+<p>尽管在文本和知识库上取得了表征学习的成功，但是<strong>关系Web表</strong>中<strong>上下文表征学习</strong>的探索还彻底。先前NLP社区的两篇论文研究了对Web表的预训练，以帮助表上的语义解析【TABERT】或问题回答【TAPAS】任务。</p>
+<p>在这项工作中，我们介绍了<strong>TURL</strong>，一种用于学习同时保留语义和知识信息的<strong>关系Web表</strong>的深度<strong>上下文表征</strong>的新方法。</p>
+<h3 id="Table-Interpretation"><a href="#Table-Interpretation" class="headerlink" title="Table Interpretation"></a>Table Interpretation</h3><p><strong>表解释</strong>：旨在揭示关系表中包含的数据的语义属性，并将这些信息转换为机器可理解的知识。</p>
+<p>这个任务通常在现有知识库帮助下完成，提取的知识可用于构建和填充知识库。</p>
+<p>表解释主要有三个任务：</p>
+<ol>
+<li>实体链接：进行特定实体的检测和歧义消除，这是表解释的关键步骤</li>
+<li>列类型注释：用知识库类型注释列</li>
+<li>关系提取：用知识库谓词来解释列对之间的关系</li>
+</ol>
+<h3 id="Table-Augmentation"><a href="#Table-Augmentation" class="headerlink" title="Table Augmentation"></a>Table Augmentation</h3><p>我们希望为用户在手动编写表格时提供一些智能的帮助，这推动了<strong>表扩充</strong>的研究。<strong>表扩充</strong>是指使用附加数据扩展种子查询表的任务。</p>
+<p>对关系表，这可以分为三个子任务：</p>
+<ol>
+<li>用于为主题列检索实体的<strong>行填充</strong>：搜索与种子实体语义相关的补体表，排名靠前的表用于填充。</li>
+<li>填充给定主题实体的单元格值的<strong>单元格填充</strong></li>
+<li>提供推荐的Header，以完成表模式的<strong>模式扩增</strong></li>
+</ol>
+<h3 id="Existing-benchmarks"><a href="#Existing-benchmarks" class="headerlink" title="Existing benchmarks"></a>Existing benchmarks</h3><p><strong>表解释</strong>的若干基准：</p>
+<ol>
+<li>T2Dv2</li>
+<li>Wikipedia from Limaye</li>
+<li>WikiGS</li>
+<li>SemTab 2019</li>
+</ol>
+<p>而<strong>表扩充</strong>几乎没有对应的基准</p>
+<p>尽管这些基准已经被用在最近的研究中，但是它们仍存在缺点：</p>
+<ol>
+<li>它们通常是具有有限注释的小的采样表集</li>
+<li>SemTab 2019包含了大量的实例；但是，它们中的大多数都是自动生成的，并且缺乏Web表的元数据/上下文</li>
+</ol>
+<p>基于此，我们编译了一个更大的基准测试，包括<strong>表解释</strong>和<strong>表扩充</strong>任务。</p>
+<hr>
+<h1 id="4-Methodology"><a href="#4-Methodology" class="headerlink" title="4 Methodology"></a>4 Methodology</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103011274.png" alt="图1 TURL 概览图"></p>
+<p>在本节中，我们将介绍<strong>TURL</strong>的框架，该框架可以在关系表上进行无监督表征学习。</p>
+<p>首先，<strong>TURL</strong>将在无标签的关系Web表语料库上预训练，以学习单词的语义以及实体之间的关系知识。之后只需要进行微调即可满足各种下游任务。</p>
+<h3 id="4-1-Model-Architecture"><a href="#4-1-Model-Architecture" class="headerlink" title="4.1 Model Architecture"></a>4.1 Model Architecture</h3><p>如概览图所示，<strong>TURL</strong>由三个模块组成：</p>
+<ol>
+<li>将输入表的不同部分转换为输入嵌入的embedding layer</li>
+<li>捕获文本信息以及关系知识的N个堆叠的结构感知Transformer编码器</li>
+<li>用作预训练目标的投影层</li>
+</ol>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103852274.png" alt="图2 模型关于输入输出的演示"></p>
+<h3 id="4-2-Embedding-Layer"><a href="#4-2-Embedding-Layer" class="headerlink" title="4.2 Embedding Layer"></a>4.2 Embedding Layer</h3><p>如图2所示，分别对token和entity进行编码。</p>
+<ul>
+<li>token的表征为三项之和：<ul>
+<li>word embedding</li>
+<li>type embedding</li>
+<li>position embedding：提供在caption或header中的相对位置信息</li>
+</ul>
+</li>
+<li>entity的表征计算：</li>
+</ul>
+<script type="math/tex; mode=display">
+\textbf{x}^e=LINEAR([\textbf{e}^e;\textbf{e}^m])+\textbf{t}^e</script><script type="math/tex; mode=display">
+\textbf{e}^m=MEAN(\textbf{w}_1,\textbf{w}_2,...,\textbf{w}_j,...)</script><p>其中$e^e$是预训练学到的entity embedding,$e^m$是word embedding的平均值。</p>
+<h3 id="4-3-Structure-aware-Transformer-Encoder"><a href="#4-3-Structure-aware-Transformer-Encoder" class="headerlink" title="4.3 Structure-aware Transformer Encoder"></a>4.3 Structure-aware Transformer Encoder</h3><ul>
+<li>基于Transformer进行改造</li>
+<li>在Multi-Head Self-Attention上增加了<strong>可见性矩阵</strong>（visibility matrix）</li>
+</ul>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004141907578.png" alt="公式"></p>
+<h4 id="Visibility-matrix"><a href="#Visibility-matrix" class="headerlink" title="Visibility matrix"></a>Visibility matrix</h4><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142233502.png" alt="图3 可见性矩阵的图形化描述"></p>
+<p>为保持行/列结构，我们需要将位于同一行/同一列的信息关联起来，而不同行不同列的信息互不影响。</p>
+<p>具体来说，就是让$M_{i,j}=1$，当且仅当第j个元素对第i个元素可见。</p>
+<p>构建矩阵的两个规则：</p>
+<ul>
+<li>如果元素i是topic entity或者在表标题中的token，$\forall j,M_{i,j}=1$</li>
+<li>如果元素i与元素j是位于同一列或同一行的token或者entity，$M_{i,j}=1$</li>
+</ul>
+<p>一个例子：</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142739816.png" alt="图4 使用可见性矩阵的自注意演示"></p>
+<blockquote>
+<p>注：使用线段连接起来的token或entity是互相可见的</p>
+</blockquote>
+<hr>
+<h3 id="Masked-Entity-Recovery"><a href="#Masked-Entity-Recovery" class="headerlink" title="Masked Entity Recovery"></a>Masked Entity Recovery</h3><p>这个可以之后来看…[待补充]</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/29/Tapas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Liodb">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/project/2022/10/29/Tapas/" class="post-title-link" itemprop="url">Tapas</a>
         </h2>
 
         <div class="post-meta-container">
@@ -192,7 +548,293 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2022-10-30 15:33:21" itemprop="dateModified" datetime="2022-10-30T15:33:21+08:00">2022-10-30</time>
+      <time title="Modified: 2022-10-31 10:07:30" itemprop="dateModified" datetime="2022-10-31T10:07:30+08:00">2022-10-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>论文标题：[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.02349">2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org)</a></p>
+<p>code:<a target="_blank" rel="noopener" href="https://github.com/google-research/tapas">google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)</a></p>
+</blockquote>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p><code>TAPAS</code>是一种不生成逻辑形式来解决【表问答】（Table Q&amp;A）问题的方法。它基于弱监督的方式，通过应用相应的聚合操作符来选择表单元格来进行预测。</p>
+<p>在三种语义解析数据集上，<strong>SQA</strong>,<strong>WIKISQL</strong>,<strong>WIKITQ</strong>均取得了较好的结果。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>从半结构化表中回答问题通常被视为一个语义解析任务，其中问题被转换为一个逻辑形式，可以对表执行，以检索正确的表示。</p>
+<ul>
+<li>语义解析器依赖于有监督的训练数据，将自然语言问题与逻辑形式配对，但这些数据的注释代价昂贵。</li>
+<li>此外，语义解析应用程序只利用生成的逻辑形式作为检索答案的中间步骤。然而，生成逻辑形式会带来困难，例如保持足够表达性，服从解码约束等。</li>
+</ul>
+<p>在本文中，我们提出了<strong>Tapas</strong>（表解析器），一个弱监督的问题回答模型，它对表进行推理，而不生成逻辑形式。因此，它可以从自然语言中学习操作，而不需要以形式主义来指定。</p>
+<h1 id="2-TAPAS-Model"><a href="#2-TAPAS-Model" class="headerlink" title="2 TAPAS Model"></a>2 TAPAS Model</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png" alt="图1 模型架构"></p>
+<p><strong>模型整体介绍</strong></p>
+<ul>
+<li>本模型基于BERT的编码器，并添加了额外的位置嵌入来编码表型结构</li>
+<li>将表格扁平化成一系列单词，再将单词分割成单词块（token），并将问题的token连接到表的token之前</li>
+<li>额外添加两个分类层用来选择表中的单元以及对这些单元格进行聚合的操作符</li>
+</ul>
+<h3 id="Additional-embedding"><a href="#Additional-embedding" class="headerlink" title="Additional embedding"></a>Additional embedding</h3><p>我们在问题与表中增添了一个分隔符，这些token嵌入的信息与表格感知的位置嵌入一起提供给模型。</p>
+<ul>
+<li>Position ID</li>
+<li>Segment ID</li>
+<li>Column &#x2F; Row ID</li>
+<li>Rank ID：对可以解析成浮点数或日期的列值进行排序</li>
+<li>Previous Answer</li>
+</ul>
+<h3 id="Cell-selection"><a href="#Cell-selection" class="headerlink" title="Cell selection"></a>Cell selection</h3><p>分类层将选择表单元格的一个子集。</p>
+<ul>
+<li>首先，我们在token的最后一个隐藏向量上使用一个线性层来计算其的logit。cell的logit是其含有token的logit的平均值。该线形层的输出为选择cell $c$的概率$p_s^{(c)}$。</li>
+<li>另外添加一个诱导偏差对在单个列中选择cell有益<ul>
+<li>我们引入一个分类变量来选择正确的列。模型使用一个新线形层对指定的列上的cell embedding进行处理。</li>
+<li>我们也添加了一个额外的列logit值，来表示不选择任何列或任何cell</li>
+<li>那么这个线形层的输出是使用softmax处理列logit后选择列<em>co</em>的概率$p_{col}^{(co)}$，另外我们设置未被选中的列上的cell概率为0</li>
+</ul>
+</li>
+</ul>
+<h3 id="Aggregation-operator-prediction"><a href="#Aggregation-operator-prediction" class="headerlink" title="Aggregation operator prediction"></a>Aggregation operator prediction</h3><p>语义解析任务需要在表上进行离散推理，例如求和和计数。</p>
+<p>为了不通过生成逻辑形式的方式解决上述任务，TAPAS在输出表单元格子集的同时，一并输出可选的聚合运算符。</p>
+<p>这些运算符描述了应用在这些单元格子集上的操作，例如<code>SUM</code>,<code>COUNT</code>,<code>AVERAGE</code>,<code>NONE</code></p>
+<p>选择指定操作符，需要让最终隐藏向量的第一个token（特殊的[CLS]token）先经过一个线性层再通过softmax。</p>
+<p>我们将这一层记作$p_a^{(op)}$，其中<em>op</em>是某个聚合运算符</p>
+<h3 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h3><p>我们预测了最有可能的聚合运算符和单元格的一个子集（使用cell selection layer）。为了预测一个离散单元格的选择，我们选择了所有其概率大于0.5的表单元格。然后，通过在选定的单元格上应用预测的聚合，对表执行这些预测来检索答案。</p>
+<h1 id="3-Pre-training"><a href="#3-Pre-training" class="headerlink" title="3 Pre-training"></a>3 Pre-training</h1><p>我们将预训练过程从单纯的自然语言文本扩展到结构化数据上，作为我们表解析任务的初始化。为此，我们在维基百科的大量表中预训练了<strong>TAPAS</strong>，这使得我们模型能够学到文本和表之间以及表的单元格和标题之间有趣的相关性。</p>
+<ul>
+<li>与TABERT一致，本文也采用了masked language model(MLM)预训练目标。</li>
+<li>我们将单词片段的序列长度控制在128以内，这需要我们对表进行适配。<ul>
+<li>首先只添加每个列名和单元格的第一个单词。然后我们不断地添加单词，直到我们达到单词块预算（128）。</li>
+</ul>
+</li>
+<li>我们遵循由BERT引入的掩蔽程序，使用 whole word masking</li>
+</ul>
+<h1 id="4-Fine-tuning"><a href="#4-Fine-tuning" class="headerlink" title="4 Fine-tuning"></a>4 Fine-tuning</h1><h3 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h3><ul>
+<li>我们在弱监督设置中正式定义表解析：</li>
+</ul>
+<p>给定一个含N个例子的训练集 ${(x_i,T_i,y_i)}_{i&#x3D;1}^N$，其中，$x_i$是一个语句（utterance)，$T_i$是一张表，$y_i$是一组相应的表示。我们的目的是学习一个模型，能够将语句<em>x</em>映射到一段程序<em>z</em>，其中<em>z</em>作用在对应的表<em>T</em>上可以得到正确的表示<em>y</em></p>
+<p>这段程序<em>z</em>包括一个表单元格的子集和一个可选的聚合运算符。表<em>T</em>将一个表单元格映射到它的值。</p>
+<ul>
+<li>在具体实现时，我们把表示<em>y</em>翻译成(C,s),其中C是单元格坐标，s是一个标量。我们可以根据(C,s)的内容指导训练：<ol>
+<li>Cell Selection : s未填充（not populated)</li>
+<li>Scalar Answer : s被填充，C为空集</li>
+</ol>
+</li>
+</ul>
+<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png" alt="image-20221002163526787"  />
+
+
+
+
+
+<p>另外，TAPAS把Table QA问题分为了三类： </p>
+<ol>
+<li><p>cell selection：可以通过选择表中若干单元格解决问题</p>
+</li>
+<li><p>scalar answer：可以通过在若干个单元格上进行聚合操作解决问题</p>
+</li>
+<li><p>ambiguous answer：在某些情况下，是<code>scalar answer</code>，而其他情况下则是<code>cell selection</code></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/28/TaBERT/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Liodb">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/project/2022/10/28/TaBERT/" class="post-title-link" itemprop="url">TaBERT</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-10-28 15:26:53" itemprop="dateCreated datePublished" datetime="2022-10-28T15:26:53+08:00">2022-10-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-10-31 10:09:44" itemprop="dateModified" datetime="2022-10-31T10:09:44+08:00">2022-10-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>论文标题</p>
+<p>Tabert: Pretraining for joint understanding of textual and tabular data</p>
+<p>arXiv:<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.08314">2005.08314</a></p>
+<p>code:<a target="_blank" rel="noopener" href="https://github.com/facebookresearch/tabert">facebookresearch/TaBERT</a></p>
+</blockquote>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p><strong>Recent years have witnessed</strong> the burgeoning of pretrained language models(LMs) for text-based natural language(自然语言) understanding tasks.</p>
+<p>这些模型通常在形式自由的自然语言文本上训练，因此可能对于有结构的数据上的语义解析任务不适用，这种解析任务需要对形式自由的自然语言问题和结构化的表格数据进行推理。</p>
+<p>本文我们提出了一种叫<strong>TABERT</strong>的预训练语言模型，它联合学习自然语言句子和（半）结构化表的表示。</p>
+<p>TABERT在一个包含2600万张表的大型语料库及其英语上下文上接受训练。在实验中，使用TABERT作为特征表示层的神经语义解析器在具有挑战性的弱监督语义解析基准<code>WIKITABLEQUESTIONS</code>上取得了新的最佳结果，同时在text-to-SQL数据集<code>SPIDER</code>上也有一定的竞争力。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>近年来，提出了BERT等预训练语言模型，这些模型能够在进行下游任务的微调前，通过无监督学习捕获文章的语法与语义。</p>
+<p>然而，如何预训练与微调同时具有自然语言句子和结构化表的问答任务仍是一个悬而未决的问题。</p>
+<p>一个典型例子是访问数据库的语义解析任务，例如将自然语言句子（<em>Which country has the largest GDP?</em>）翻译为对数据库表的查询语句。这个应用场景的主要挑战不仅在于理解数据库表的结构化模式，还在于输入文本和模式之间的对齐方式，例如”GDP”指代<code>Gross Domestic Product</code>这一列。</p>
+<p>因此，针对此任务定制的神经语义解析器试图学习自然语言语句和数据库表结构化模式的联合表示。然而，这种独特的设置给应用预训练语言模型带来了几个挑战：</p>
+<ol>
+<li>储存在数据库表中的信息表现出强大的底层结构，而现有的语言模型仅为自然语言文本训练。</li>
+<li>一个数据库表有大量的行，使用占用大量资源的语言模型简单地对所有行进行编码将会难以计算。</li>
+<li>大多数基于文本的QA任务，可以设计为一个通用的答案跨度选择问题，并且可以用预训练模型与额外的分类层解决。但是，语义解析是高度特定于领域的，并且神经解析器的架构与其底层数据库的结构紧密耦合。</li>
+</ol>
+<p>事实上，现有的系统已经试图利用BERT，但每个系统都有自己的特定于领域的内部策略来编码DB中的结构化信息，并且没有使用在结构化表上预训练的表示。这些挑战要求开发通用的预训练方法，用于学习自然语言话语和结构化数据库表的表示。</p>
+<p>因此，本文提出了<code>TABERT</code>,它建立在BERT的基础上，并联合学习语句的上下文表示和DB表的结构化模式。特殊地，<code>TABERT</code>通过将表的结构线性化来适配基于Transformer的BERT模型。</p>
+<p>为了处理大型表，我们提出了内容快照（content snapshots），这是一种编码与输入话语最相关的表内容子集的方法。该策略进一步与垂直注意机制结合，在不同行的单元格表示之间共享信息。</p>
+<p><code>TABERT</code>可以被插入到一个神经语义解析器中，作为一个通用的编码器来计算话语和表的表示。我们的关键见解是，尽管语义解析器是高度特定于领域的，但大多数系统依赖于输入话语和表模式来促进后续生成数据库查询，这些representations无论解析任务的域，都可以由TABERT提供。</p>
+<p>我们将<code>TABERT</code>应用在两个语义解析范式：</p>
+<ol>
+<li>SPIDER,a test-to-SQL dataset</li>
+<li>WIKI TABLE QUESTIONS benchmark</li>
+</ol>
+<p>我们证明了<code>TABERT</code>在这两种情况下都是有效的，表明它是解析器的原始编码器的一个可插入替换，用于计算自然语言话语和DB表的上下文表示。具体来说，使用TABERT增强的系统优于使用BERT的系统，在可用问题上得到了最先进的性能。</p>
+<h1 id="2-Background"><a href="#2-Background" class="headerlink" title="2 Background"></a>2 Background</h1><h3 id="Semantic-Parsing-over-Tables"><a href="#Semantic-Parsing-over-Tables" class="headerlink" title="Semantic Parsing over Tables"></a>Semantic Parsing over Tables</h3><p>语义解析：自然语言的语句 <strong>u</strong> -&gt; 正式意义表示（例如SQL查询语句） <strong>z</strong></p>
+<p>根据数据库使用的底层数据表示模式，表可以使用强类型和规范化内容进行完全结构化</p>
+<h3 id="Masked-Language-Models"><a href="#Masked-Language-Models" class="headerlink" title="Masked Language Models"></a>Masked Language Models</h3><p>给定一个自然语言token序列 x = $x_1,x_2,…,x_n$ ,MLM是一个使用掩蔽语言建模目标进行训练的语言模型。它的目的是从x中的一个【损坏的】通过随机屏蔽x中的某些标记的上下文中恢复原来的标记。</p>
+<h1 id="3-TABERT"><a href="#3-TABERT" class="headerlink" title="3 TABERT"></a>3 TABERT</h1><p>我们首先介绍TABERT如何计算自然语言话语和表模式（3.1），然后描述预训练的过程（3.2)</p>
+<p><img src="TaBERT.assets/image-20220930151436739.png" alt="image-20220930151436739"></p>
+<h2 id="3-1-Computing-Representations"><a href="#3-1-Computing-Representations" class="headerlink" title="3.1 Computing Representations"></a>3.1 Computing Representations</h2><h3 id="3-1-1-Content-snapshot"><a href="#3-1-1-Content-snapshot" class="headerlink" title="3.1.1 Content snapshot"></a>3.1.1 Content snapshot</h3><p>给定一个语句 u (<em>In which city did Piotr’s last 1st place finish occur?</em>)和一个表 T，首先创建一个内容快照，如图1所示。</p>
+<p>这个快照由采样的行组成，这些行总结了T中与输入话语最相关的信息。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20220930134402290.png" alt="图1 针对输入表的一个内容快照"></p>
+<p>为了减少计算开销，我们选择与输入话语最相关的几行作为内容快照。采用的策略是<strong>基于n-gram的字符匹配率</strong>，<strong>选取Top-K</strong>，K的选取由查询文本与表格数据决定，在本文中选取$n\le3$。</p>
+<h3 id="3-1-2-Linearization"><a href="#3-1-2-Linearization" class="headerlink" title="3.1.2 Linearization"></a>3.1.2 Linearization</h3><p>然后，该模型将快照中的每一行线性化，将每个线性化的行与话语连接起来，并使用连接的字符串作为Transformer（例如，BERT）模型的输入，该模型输出话语标记和单元格的行级编码向量。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20220930135133769.png" alt="图2 逐行编码示意图"></p>
+<p>具体来说，每个单元格由列的名称和数据类型表示，以及它的实际值，用一个竖条分隔。</p>
+<p>然后，通过连接所有单元格的上述字符串编码，由[SEP]符号分隔。</p>
+<h3 id="3-1-3-Vertical-Self-Attention-Mechanism"><a href="#3-1-3-Vertical-Self-Attention-Mechanism" class="headerlink" title="3.1.3 Vertical Self-Attention Mechanism"></a>3.1.3 Vertical Self-Attention Mechanism</h3><p>这些编码会被输入到一系列垂直的自注意层中，其中，单元格表示（或话语标记表示）是通过关注同一列（或同一自然语言标记）的垂直对齐向量来计算的。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20220930135645288.png" alt="图3 垂直自注意层"></p>
+<p>为了允许信息在不同行的单元格表示之间流动，提出了垂直自注意。</p>
+<p>如图3所示，TABERT有V个堆叠的垂直级的自注意层。为了给垂直自注意层生成对齐的输入，首先为每个单元格计算一个定长初始化向量，计算方法为对Transformer的输出向量序列采用平均值池化。之后，自然语言话语的单词向量序列（来自基本Transformer模型）与该单元的向量连接，作为垂直注意层的初始输入。</p>
+<p>每个垂直注意层具有与Transformer层相同的参数化，但操作对象为垂直对齐的元素。这种垂直的自注意机制使模型能够聚合来自内容快照中不同行的信息，从而允许TABERT捕获对单元格的跨行依赖关系。</p>
+<h3 id="3-1-4-Utterance-and-Column-Representations"><a href="#3-1-4-Utterance-and-Column-Representations" class="headerlink" title="3.1.4 Utterance and Column Representations"></a>3.1.4 Utterance and Column Representations</h3><p>representation $\pmb{c}_j$ 是从最后一个垂直层通过在其垂直对齐的单元格向量${\{\pmb{s}_{<i,j>}:R_i\ in\ content\ snapshot \}}$ 上进行平均值池化来计算每一列 $c_j.$ </p>
+<p>自然语言语句的representation $\pmb{x}_j$ 在垂直对齐的标记向量上的计算方法类似。</p>
+<p>这些表示方法将被下游的神经语义解析器使用。TABERT还使用前缀[CLS]符号的表示输出一个可选的固定长度table representation $\pmb{T}$，这对在多个数据库表上操作的解析器很有用。</p>
+<h2 id="3-2-Pretraining-Procedure"><a href="#3-2-Pretraining-Procedure" class="headerlink" title="3.2 Pretraining Procedure"></a>3.2 Pretraining Procedure</h2><h3 id="3-2-1-Training-Data"><a href="#3-2-1-Training-Data" class="headerlink" title="3.2.1 Training Data"></a>3.2.1 Training Data</h3><p>由于没有大规模的、高质量的自然语言文本和结构化表的并行语料库，因此我们改为使用通常存在于Web上的半结构化表作为替代数据源。具体来说，我们从英文维基百科和WDC网络表格语料库中收集表格及其周围的自然语言文本，这是一个来自CommonCrawl的大型表格集合。</p>
+<h3 id="3-2-2-Unsupervised-Learning-Objectives"><a href="#3-2-2-Unsupervised-Learning-Objectives" class="headerlink" title="3.2.2 Unsupervised Learning Objectives"></a>3.2.2 Unsupervised Learning Objectives</h3><p>我们应用不同的目标来学习自然语言上下文和结构化表的表示。对于自然语言上下文，我们使用标准的掩蔽语言建模（MLM）目标，在自然语言上下文中掩蔽率为15%。</p>
+<p>对于学习列表示，我们设计了两个目标，其直觉是一个列表示应该包含列的一般信息（例如，它的名称和数据类型），以及与自然语言上下文相关的代表性单元格值。</p>
+<h4 id="Masked-Column-Prediction"><a href="#Masked-Column-Prediction" class="headerlink" title="Masked Column Prediction"></a>Masked Column Prediction</h4><p>掩蔽列预测（MCP）目标鼓励模型恢复掩蔽列的名称和数据类型。</p>
+<h4 id="Cell-Value-Recovery"><a href="#Cell-Value-Recovery" class="headerlink" title="Cell Value Recovery"></a>Cell Value Recovery</h4><p>确保内容快照中有代表性的单元值的信息在内容快照中经过额外的垂直自注意层后被保留。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003103634672.png" alt="image-20221003103634672"></p>
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><h3 id="n-gram模型"><a href="#n-gram模型" class="headerlink" title="n-gram模型"></a>n-gram模型</h3><p>N-Gram是一种基于统计语言模型的算法。它的基本思想是将文本里面的内容按照字节进行大小为N的滑动窗口操作，形成了长度是N的字节片段序列。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/27/Table%20Pre-training%EF%BC%88%E9%9B%B6%EF%BC%89%E7%BB%BC%E8%BF%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Liodb">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/project/2022/10/27/Table%20Pre-training%EF%BC%88%E9%9B%B6%EF%BC%89%E7%BB%BC%E8%BF%B0/" class="post-title-link" itemprop="url">Table Pre-training（零）综述</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-10-27 15:26:53" itemprop="dateCreated datePublished" datetime="2022-10-27T15:26:53+08:00">2022-10-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-10-31 10:07:01" itemprop="dateModified" datetime="2022-10-31T10:07:01+08:00">2022-10-31</time>
     </span>
 
   

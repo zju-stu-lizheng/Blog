@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/project/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/project/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/project/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/project/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/project/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zju-stu-lizheng.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/project/js/config.js"></script>
+
+    <meta name="description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tapas">
+<meta property="og:url" content="https://zju-stu-lizheng.github.io/project/2022/10/29/Tapas/index.html">
+<meta property="og:site_name" content="Liodb&#39;s Blog">
+<meta property="og:description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png">
+<meta property="article:published_time" content="2022-10-29T07:26:53.000Z">
+<meta property="article:modified_time" content="2022-10-31T02:07:30.277Z">
+<meta property="article:author" content="Liodb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png">
+
+
+<link rel="canonical" href="https://zju-stu-lizheng.github.io/project/2022/10/29/Tapas/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://zju-stu-lizheng.github.io/project/2022/10/29/Tapas/","path":"2022/10/29/Tapas/","title":"Tapas"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Tapas | Liodb's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/project/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/project/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Liodb's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">2.</span> <span class="nav-text">1 Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-TAPAS-Model"><span class="nav-number">3.</span> <span class="nav-text">2 TAPAS Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Additional-embedding"><span class="nav-number">3.0.1.</span> <span class="nav-text">Additional embedding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cell-selection"><span class="nav-number">3.0.2.</span> <span class="nav-text">Cell selection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Aggregation-operator-prediction"><span class="nav-number">3.0.3.</span> <span class="nav-text">Aggregation operator prediction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Inference"><span class="nav-number">3.0.4.</span> <span class="nav-text">Inference</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Pre-training"><span class="nav-number">4.</span> <span class="nav-text">3 Pre-training</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Fine-tuning"><span class="nav-number">5.</span> <span class="nav-text">4 Fine-tuning</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%A7%88"><span class="nav-number">5.0.1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cell-Selection"><span class="nav-number">5.0.2.</span> <span class="nav-text">Cell Selection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scalar-Answer"><span class="nav-number">5.0.3.</span> <span class="nav-text">Scalar Answer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ambiguous-Answer"><span class="nav-number">5.0.4.</span> <span class="nav-text">Ambiguous Answer</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liodb</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/project/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zju-stu-lizheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zju-stu-lizheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizheng.cs@zju.edu.cn" title="E-Mail → mailto:lizheng.cs@zju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/29/Tapas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Liodb">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tapas | Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Tapas
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-10-29 15:26:53" itemprop="dateCreated datePublished" datetime="2022-10-29T15:26:53+08:00">2022-10-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-10-31 10:07:30" itemprop="dateModified" datetime="2022-10-31T10:07:30+08:00">2022-10-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>论文标题：[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.02349">2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org)</a></p>
+<p>code:<a target="_blank" rel="noopener" href="https://github.com/google-research/tapas">google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)</a></p>
+</blockquote>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p><code>TAPAS</code>是一种不生成逻辑形式来解决【表问答】（Table Q&amp;A）问题的方法。它基于弱监督的方式，通过应用相应的聚合操作符来选择表单元格来进行预测。</p>
+<p>在三种语义解析数据集上，<strong>SQA</strong>,<strong>WIKISQL</strong>,<strong>WIKITQ</strong>均取得了较好的结果。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>从半结构化表中回答问题通常被视为一个语义解析任务，其中问题被转换为一个逻辑形式，可以对表执行，以检索正确的表示。</p>
+<ul>
+<li>语义解析器依赖于有监督的训练数据，将自然语言问题与逻辑形式配对，但这些数据的注释代价昂贵。</li>
+<li>此外，语义解析应用程序只利用生成的逻辑形式作为检索答案的中间步骤。然而，生成逻辑形式会带来困难，例如保持足够表达性，服从解码约束等。</li>
+</ul>
+<p>在本文中，我们提出了<strong>Tapas</strong>（表解析器），一个弱监督的问题回答模型，它对表进行推理，而不生成逻辑形式。因此，它可以从自然语言中学习操作，而不需要以形式主义来指定。</p>
+<h1 id="2-TAPAS-Model"><a href="#2-TAPAS-Model" class="headerlink" title="2 TAPAS Model"></a>2 TAPAS Model</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png" alt="图1 模型架构"></p>
+<p><strong>模型整体介绍</strong></p>
+<ul>
+<li>本模型基于BERT的编码器，并添加了额外的位置嵌入来编码表型结构</li>
+<li>将表格扁平化成一系列单词，再将单词分割成单词块（token），并将问题的token连接到表的token之前</li>
+<li>额外添加两个分类层用来选择表中的单元以及对这些单元格进行聚合的操作符</li>
+</ul>
+<h3 id="Additional-embedding"><a href="#Additional-embedding" class="headerlink" title="Additional embedding"></a>Additional embedding</h3><p>我们在问题与表中增添了一个分隔符，这些token嵌入的信息与表格感知的位置嵌入一起提供给模型。</p>
+<ul>
+<li>Position ID</li>
+<li>Segment ID</li>
+<li>Column &#x2F; Row ID</li>
+<li>Rank ID：对可以解析成浮点数或日期的列值进行排序</li>
+<li>Previous Answer</li>
+</ul>
+<h3 id="Cell-selection"><a href="#Cell-selection" class="headerlink" title="Cell selection"></a>Cell selection</h3><p>分类层将选择表单元格的一个子集。</p>
+<ul>
+<li>首先，我们在token的最后一个隐藏向量上使用一个线性层来计算其的logit。cell的logit是其含有token的logit的平均值。该线形层的输出为选择cell $c$的概率$p_s^{(c)}$。</li>
+<li>另外添加一个诱导偏差对在单个列中选择cell有益<ul>
+<li>我们引入一个分类变量来选择正确的列。模型使用一个新线形层对指定的列上的cell embedding进行处理。</li>
+<li>我们也添加了一个额外的列logit值，来表示不选择任何列或任何cell</li>
+<li>那么这个线形层的输出是使用softmax处理列logit后选择列<em>co</em>的概率$p_{col}^{(co)}$，另外我们设置未被选中的列上的cell概率为0</li>
+</ul>
+</li>
+</ul>
+<h3 id="Aggregation-operator-prediction"><a href="#Aggregation-operator-prediction" class="headerlink" title="Aggregation operator prediction"></a>Aggregation operator prediction</h3><p>语义解析任务需要在表上进行离散推理，例如求和和计数。</p>
+<p>为了不通过生成逻辑形式的方式解决上述任务，TAPAS在输出表单元格子集的同时，一并输出可选的聚合运算符。</p>
+<p>这些运算符描述了应用在这些单元格子集上的操作，例如<code>SUM</code>,<code>COUNT</code>,<code>AVERAGE</code>,<code>NONE</code></p>
+<p>选择指定操作符，需要让最终隐藏向量的第一个token（特殊的[CLS]token）先经过一个线性层再通过softmax。</p>
+<p>我们将这一层记作$p_a^{(op)}$，其中<em>op</em>是某个聚合运算符</p>
+<h3 id="Inference"><a href="#Inference" class="headerlink" title="Inference"></a>Inference</h3><p>我们预测了最有可能的聚合运算符和单元格的一个子集（使用cell selection layer）。为了预测一个离散单元格的选择，我们选择了所有其概率大于0.5的表单元格。然后，通过在选定的单元格上应用预测的聚合，对表执行这些预测来检索答案。</p>
+<h1 id="3-Pre-training"><a href="#3-Pre-training" class="headerlink" title="3 Pre-training"></a>3 Pre-training</h1><p>我们将预训练过程从单纯的自然语言文本扩展到结构化数据上，作为我们表解析任务的初始化。为此，我们在维基百科的大量表中预训练了<strong>TAPAS</strong>，这使得我们模型能够学到文本和表之间以及表的单元格和标题之间有趣的相关性。</p>
+<ul>
+<li>与TABERT一致，本文也采用了masked language model(MLM)预训练目标。</li>
+<li>我们将单词片段的序列长度控制在128以内，这需要我们对表进行适配。<ul>
+<li>首先只添加每个列名和单元格的第一个单词。然后我们不断地添加单词，直到我们达到单词块预算（128）。</li>
+</ul>
+</li>
+<li>我们遵循由BERT引入的掩蔽程序，使用 whole word masking</li>
+</ul>
+<h1 id="4-Fine-tuning"><a href="#4-Fine-tuning" class="headerlink" title="4 Fine-tuning"></a>4 Fine-tuning</h1><h3 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h3><ul>
+<li>我们在弱监督设置中正式定义表解析：</li>
+</ul>
+<p>给定一个含N个例子的训练集 ${(x_i,T_i,y_i)}_{i&#x3D;1}^N$，其中，$x_i$是一个语句（utterance)，$T_i$是一张表，$y_i$是一组相应的表示。我们的目的是学习一个模型，能够将语句<em>x</em>映射到一段程序<em>z</em>，其中<em>z</em>作用在对应的表<em>T</em>上可以得到正确的表示<em>y</em></p>
+<p>这段程序<em>z</em>包括一个表单元格的子集和一个可选的聚合运算符。表<em>T</em>将一个表单元格映射到它的值。</p>
+<ul>
+<li>在具体实现时，我们把表示<em>y</em>翻译成(C,s),其中C是单元格坐标，s是一个标量。我们可以根据(C,s)的内容指导训练：<ol>
+<li>Cell Selection : s未填充（not populated)</li>
+<li>Scalar Answer : s被填充，C为空集</li>
+</ol>
+</li>
+</ul>
+<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png" alt="image-20221002163526787"  />
+
+
+
+
+
+<p>另外，TAPAS把Table QA问题分为了三类： </p>
+<ol>
+<li><p>cell selection：可以通过选择表中若干单元格解决问题</p>
+</li>
+<li><p>scalar answer：可以通过在若干个单元格上进行聚合操作解决问题</p>
+</li>
+<li><p>ambiguous answer：在某些情况下，是<code>scalar answer</code>，而其他情况下则是<code>cell selection</code></p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/project/2022/10/28/TaBERT/" rel="prev" title="TaBERT">
+                  <i class="fa fa-chevron-left"></i> TaBERT
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/project/2022/10/30/TURL/" rel="next" title="TURL">
+                  TURL <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liodb</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/project/js/comments.js"></script><script src="/project/js/utils.js"></script><script src="/project/js/motion.js"></script><script src="/project/js/schemes/muse.js"></script><script src="/project/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

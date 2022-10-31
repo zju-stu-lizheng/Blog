@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/project/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/project/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/project/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/project/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/project/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"zju-stu-lizheng.github.io","root":"/project/","images":"/project/images","scheme":"Muse","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/project/js/config.js"></script>
+
+    <meta name="description" content="论文：TURL: Table Understanding through Representation Learning (arxiv.org) code：“TURL: Table Understanding through Representation Learning” (github.com)  词汇表征： Word representation  输入嵌入： Input Embeddin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TURL">
+<meta property="og:url" content="https://zju-stu-lizheng.github.io/project/2022/10/30/TURL/index.html">
+<meta property="og:site_name" content="Liodb&#39;s Blog">
+<meta property="og:description" content="论文：TURL: Table Understanding through Representation Learning (arxiv.org) code：“TURL: Table Understanding through Representation Learning” (github.com)  词汇表征： Word representation  输入嵌入： Input Embeddin">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003104405815.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103011274.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103852274.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004141907578.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142233502.png">
+<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142739816.png">
+<meta property="article:published_time" content="2022-10-30T07:26:53.000Z">
+<meta property="article:modified_time" content="2022-10-31T02:18:41.392Z">
+<meta property="article:author" content="Liodb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png">
+
+
+<link rel="canonical" href="https://zju-stu-lizheng.github.io/project/2022/10/30/TURL/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://zju-stu-lizheng.github.io/project/2022/10/30/TURL/","path":"2022/10/30/TURL/","title":"TURL"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>TURL | Liodb's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/project/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/project/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Liodb's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Introduction"><span class="nav-number">2.</span> <span class="nav-text">1 Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Relational-table-encoding"><span class="nav-number">2.0.1.</span> <span class="nav-text">Relational table encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Factual-knowledge-modeling"><span class="nav-number">2.0.2.</span> <span class="nav-text">Factual knowledge modeling</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Preliminary"><span class="nav-number">3.</span> <span class="nav-text">2 Preliminary</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Related-Work"><span class="nav-number">4.</span> <span class="nav-text">3 Related Work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Representation-Learning"><span class="nav-number">4.0.1.</span> <span class="nav-text">Representation Learning</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-Interpretation"><span class="nav-number">4.0.2.</span> <span class="nav-text">Table Interpretation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Table-Augmentation"><span class="nav-number">4.0.3.</span> <span class="nav-text">Table Augmentation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Existing-benchmarks"><span class="nav-number">4.0.4.</span> <span class="nav-text">Existing benchmarks</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Methodology"><span class="nav-number">5.</span> <span class="nav-text">4 Methodology</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Model-Architecture"><span class="nav-number">5.0.1.</span> <span class="nav-text">4.1 Model Architecture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Embedding-Layer"><span class="nav-number">5.0.2.</span> <span class="nav-text">4.2 Embedding Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Structure-aware-Transformer-Encoder"><span class="nav-number">5.0.3.</span> <span class="nav-text">4.3 Structure-aware Transformer Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Visibility-matrix"><span class="nav-number">5.0.3.1.</span> <span class="nav-text">Visibility matrix</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Masked-Entity-Recovery"><span class="nav-number">5.0.4.</span> <span class="nav-text">Masked Entity Recovery</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Liodb</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/project/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zju-stu-lizheng" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zju-stu-lizheng" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizheng.cs@zju.edu.cn" title="E-Mail → mailto:lizheng.cs@zju.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://zju-stu-lizheng.github.io/project/2022/10/30/TURL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/project/images/avatar.gif">
+      <meta itemprop="name" content="Liodb">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="TURL | Liodb's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TURL
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2022-10-30 15:26:53" itemprop="dateCreated datePublished" datetime="2022-10-30T15:26:53+08:00">2022-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2022-10-31 10:18:41" itemprop="dateModified" datetime="2022-10-31T10:18:41+08:00">2022-10-31</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.14806.pdf">TURL: Table Understanding through Representation Learning (arxiv.org)</a></p>
+<p>code：<a target="_blank" rel="noopener" href="https://github.com/sunlab-osu/TURL">“TURL: Table Understanding through Representation Learning” (github.com)</a></p>
+</blockquote>
+<p><strong>词汇表征</strong>： Word representation </p>
+<p><strong>输入嵌入</strong>： Input Embedding</p>
+<p><strong>关系Web表</strong>：relational Web table，指在HTML代码的帮助下展现在网络上的具有行列结构的表格。</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png" alt="关系Web表示例图"></p>
+<h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>在本文中，我们提出了<strong>TURL</strong>，一个新的框架，它引入了关系Web表的预训练/微调范式。</p>
+<p>在预训练期间，我们的框架以一种无监督的方式学习关系Web表上的深度上下文表征。它的通用模型设计与预训练的表征可凭借最小的任务特定的微调应用于广泛的任务。</p>
+<p>具体来说，我们提出了一个【结构感知】（Structure-aware）的Transformer编码器来建模关系Web表的行-列结构，并提出了一个新的掩蔽实体恢复（MER）预训练目标，以捕获大规模未标记数据中的语义和知识。</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>一方面，在关系Web表数据集上的工作通常依赖于复杂设计的特定于任务的方法，有着以下的缺点：</p>
+<ul>
+<li>简单的特性只捕获浅层模式，并且通常无法处理Web表中的灵活模式和各种表达式</li>
+<li>特定于任务的特性和模型架构需要努力进行设计，并且不能很好地跨任务进行泛化</li>
+</ul>
+<p>另一方面，预训练/微调范式在非结构化文本上取得了成功，但几乎没有扩展到对关系Web表这种范式研究上。</p>
+<p>此外，像Word2Vec这样的浅层神经模型的学习能力相对有限，这阻碍了对关系Web表中包含的复杂语义知识的捕获。</p>
+<p>综上所述，为填补空白，我们提出了新框架<strong>TURL</strong>，通过无监督方式的预训练和特定任务的微调来学习关系Web表上的深度上下文表征。</p>
+<p>两个主要挑战：</p>
+<ol>
+<li>Relational table encoding：挑战在于开发一种建模行和列结构的方法，以及集成来自表的不同组件的异构信息。</li>
+<li>Factual knowledge modeling：关系Web表包含大量关于实体的事实知识，现有的语言模型无法直接捕获</li>
+</ol>
+<h3 id="Relational-table-encoding"><a href="#Relational-table-encoding" class="headerlink" title="Relational table encoding"></a>Relational table encoding</h3><p>我们将来自不同表组件的信息编码到单独的输入嵌入中，并将它们融合在一起。接下来我们使用了带有掩码自监督的结构感知Transformer编码器。</p>
+<p>我们通过限制每个元素只聚合来自其他结构相关元素的信息，来显式地对行和列结构进行建模。为实现这一点，我们构建了一个基于表结构的可见性矩阵，并将其作为自注意层的附加掩模。</p>
+<h3 id="Factual-knowledge-modeling"><a href="#Factual-knowledge-modeling" class="headerlink" title="Factual knowledge modeling"></a>Factual knowledge modeling</h3><p>我们首先在预训练学习每个实体的嵌入。然后，我们在可见性矩阵的帮助下，对同一行或列中的实体之间的关系进行建模。</p>
+<p>最后，我们提出了一个掩蔽实体恢复（MER）预训练的目标。该技术随机屏蔽表中的实体，目的是基于其他实体和表上下文恢复屏蔽项。</p>
+<p>我们的贡献主要有以下三点：</p>
+<ol>
+<li>TURL是第一个向关系Web表引入预训练/微调范式的框架</li>
+<li>我们提出了一种结构感知的变压器编码器来建模关系Web表中的结构信息。我们还提出了一个新的屏蔽实体恢复（MER）预训练目标，以学习关系Web表中的语义和关于实体的事实知识。</li>
+<li>为了促进这个方向的研究，我们提出了一个包含6个不同任务的表解释和增强的基准。</li>
+</ol>
+<h1 id="2-Preliminary"><a href="#2-Preliminary" class="headerlink" title="2 Preliminary"></a>2 Preliminary</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003104405815.png" alt="表1 符号表"></p>
+<p>【定义一】给定一个关系Web表语料库，<strong>表征学习任务</strong>旨在以无监督的方式为所有Table caption 𝐶和Header 𝐻以及每个实体中的所有token（例如，所有实体单元𝐸和主题实体$e_t$）学习任务无关的上下文向量表征。</p>
+<h1 id="3-Related-Work"><a href="#3-Related-Work" class="headerlink" title="3 Related Work"></a>3 Related Work</h1><h3 id="Representation-Learning"><a href="#Representation-Learning" class="headerlink" title="Representation Learning"></a>Representation Learning</h3><p><code>Word2Vec</code>等工作在大规模文档上预训练分布式<strong>词汇表征</strong>，而词汇表征被广泛应用在<strong>输入嵌入</strong>中并取得了比随机初始化更优秀的表现。</p>
+<p>然而潜在的一词多义问题，即在不同语境中模拟不同的词汇使用，激发了<strong>上下文化词汇表征</strong>的发展。</p>
+<p>不同于学习每个词汇固定的嵌入，该工作建立了学习句子中联合分布概率的语言模型。这种语言模型在大量NLP任务中取得了SOTA的结果。</p>
+<hr>
+<p>在知识库（Knowledge Base)表征学习方面，<code>ERNIE</code>利用预训练知识库嵌入和去噪实体自动编码器目标，将知识库信息注入到预训练过的BERT模型中，实验结果表明这一操作对实体链接、关系提取等任务有效。</p>
+<hr>
+<p>尽管在文本和知识库上取得了表征学习的成功，但是<strong>关系Web表</strong>中<strong>上下文表征学习</strong>的探索还彻底。先前NLP社区的两篇论文研究了对Web表的预训练，以帮助表上的语义解析【TABERT】或问题回答【TAPAS】任务。</p>
+<p>在这项工作中，我们介绍了<strong>TURL</strong>，一种用于学习同时保留语义和知识信息的<strong>关系Web表</strong>的深度<strong>上下文表征</strong>的新方法。</p>
+<h3 id="Table-Interpretation"><a href="#Table-Interpretation" class="headerlink" title="Table Interpretation"></a>Table Interpretation</h3><p><strong>表解释</strong>：旨在揭示关系表中包含的数据的语义属性，并将这些信息转换为机器可理解的知识。</p>
+<p>这个任务通常在现有知识库帮助下完成，提取的知识可用于构建和填充知识库。</p>
+<p>表解释主要有三个任务：</p>
+<ol>
+<li>实体链接：进行特定实体的检测和歧义消除，这是表解释的关键步骤</li>
+<li>列类型注释：用知识库类型注释列</li>
+<li>关系提取：用知识库谓词来解释列对之间的关系</li>
+</ol>
+<h3 id="Table-Augmentation"><a href="#Table-Augmentation" class="headerlink" title="Table Augmentation"></a>Table Augmentation</h3><p>我们希望为用户在手动编写表格时提供一些智能的帮助，这推动了<strong>表扩充</strong>的研究。<strong>表扩充</strong>是指使用附加数据扩展种子查询表的任务。</p>
+<p>对关系表，这可以分为三个子任务：</p>
+<ol>
+<li>用于为主题列检索实体的<strong>行填充</strong>：搜索与种子实体语义相关的补体表，排名靠前的表用于填充。</li>
+<li>填充给定主题实体的单元格值的<strong>单元格填充</strong></li>
+<li>提供推荐的Header，以完成表模式的<strong>模式扩增</strong></li>
+</ol>
+<h3 id="Existing-benchmarks"><a href="#Existing-benchmarks" class="headerlink" title="Existing benchmarks"></a>Existing benchmarks</h3><p><strong>表解释</strong>的若干基准：</p>
+<ol>
+<li>T2Dv2</li>
+<li>Wikipedia from Limaye</li>
+<li>WikiGS</li>
+<li>SemTab 2019</li>
+</ol>
+<p>而<strong>表扩充</strong>几乎没有对应的基准</p>
+<p>尽管这些基准已经被用在最近的研究中，但是它们仍存在缺点：</p>
+<ol>
+<li>它们通常是具有有限注释的小的采样表集</li>
+<li>SemTab 2019包含了大量的实例；但是，它们中的大多数都是自动生成的，并且缺乏Web表的元数据/上下文</li>
+</ol>
+<p>基于此，我们编译了一个更大的基准测试，包括<strong>表解释</strong>和<strong>表扩充</strong>任务。</p>
+<hr>
+<h1 id="4-Methodology"><a href="#4-Methodology" class="headerlink" title="4 Methodology"></a>4 Methodology</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103011274.png" alt="图1 TURL 概览图"></p>
+<p>在本节中，我们将介绍<strong>TURL</strong>的框架，该框架可以在关系表上进行无监督表征学习。</p>
+<p>首先，<strong>TURL</strong>将在无标签的关系Web表语料库上预训练，以学习单词的语义以及实体之间的关系知识。之后只需要进行微调即可满足各种下游任务。</p>
+<h3 id="4-1-Model-Architecture"><a href="#4-1-Model-Architecture" class="headerlink" title="4.1 Model Architecture"></a>4.1 Model Architecture</h3><p>如概览图所示，<strong>TURL</strong>由三个模块组成：</p>
+<ol>
+<li>将输入表的不同部分转换为输入嵌入的embedding layer</li>
+<li>捕获文本信息以及关系知识的N个堆叠的结构感知Transformer编码器</li>
+<li>用作预训练目标的投影层</li>
+</ol>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103852274.png" alt="图2 模型关于输入输出的演示"></p>
+<h3 id="4-2-Embedding-Layer"><a href="#4-2-Embedding-Layer" class="headerlink" title="4.2 Embedding Layer"></a>4.2 Embedding Layer</h3><p>如图2所示，分别对token和entity进行编码。</p>
+<ul>
+<li>token的表征为三项之和：<ul>
+<li>word embedding</li>
+<li>type embedding</li>
+<li>position embedding：提供在caption或header中的相对位置信息</li>
+</ul>
+</li>
+<li>entity的表征计算：</li>
+</ul>
+<script type="math/tex; mode=display">
+\textbf{x}^e=LINEAR([\textbf{e}^e;\textbf{e}^m])+\textbf{t}^e</script><script type="math/tex; mode=display">
+\textbf{e}^m=MEAN(\textbf{w}_1,\textbf{w}_2,...,\textbf{w}_j,...)</script><p>其中$e^e$是预训练学到的entity embedding,$e^m$是word embedding的平均值。</p>
+<h3 id="4-3-Structure-aware-Transformer-Encoder"><a href="#4-3-Structure-aware-Transformer-Encoder" class="headerlink" title="4.3 Structure-aware Transformer Encoder"></a>4.3 Structure-aware Transformer Encoder</h3><ul>
+<li>基于Transformer进行改造</li>
+<li>在Multi-Head Self-Attention上增加了<strong>可见性矩阵</strong>（visibility matrix）</li>
+</ul>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004141907578.png" alt="公式"></p>
+<h4 id="Visibility-matrix"><a href="#Visibility-matrix" class="headerlink" title="Visibility matrix"></a>Visibility matrix</h4><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142233502.png" alt="图3 可见性矩阵的图形化描述"></p>
+<p>为保持行/列结构，我们需要将位于同一行/同一列的信息关联起来，而不同行不同列的信息互不影响。</p>
+<p>具体来说，就是让$M_{i,j}=1$，当且仅当第j个元素对第i个元素可见。</p>
+<p>构建矩阵的两个规则：</p>
+<ul>
+<li>如果元素i是topic entity或者在表标题中的token，$\forall j,M_{i,j}=1$</li>
+<li>如果元素i与元素j是位于同一列或同一行的token或者entity，$M_{i,j}=1$</li>
+</ul>
+<p>一个例子：</p>
+<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142739816.png" alt="图4 使用可见性矩阵的自注意演示"></p>
+<blockquote>
+<p>注：使用线段连接起来的token或entity是互相可见的</p>
+</blockquote>
+<hr>
+<h3 id="Masked-Entity-Recovery"><a href="#Masked-Entity-Recovery" class="headerlink" title="Masked Entity Recovery"></a>Masked Entity Recovery</h3><p>这个可以之后来看…[待补充]</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/project/2022/10/29/Tapas/" rel="prev" title="Tapas">
+                  <i class="fa fa-chevron-left"></i> Tapas
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/project/2022/10/31/TUTA/" rel="next" title="TUTA">
+                  TUTA <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Liodb</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/project/js/comments.js"></script><script src="/project/js/utils.js"></script><script src="/project/js/motion.js"></script><script src="/project/js/schemes/muse.js"></script><script src="/project/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
