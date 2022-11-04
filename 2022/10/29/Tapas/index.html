@@ -14,13 +14,13 @@
 <meta property="og:site_name" content="Liodb&#39;s Blog">
 <meta property="og:description" content="论文标题：[2004.02349] TAPAS: Weakly Supervised Table Parsing via Pre-training (arxiv.org) code:google-research&#x2F;tapas: End-to-end neural table-text understanding models. (github.com)  AbstractTAPAS是一种不生成逻">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221001151143467.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221002163526787.png">
 <meta property="article:published_time" content="2022-10-29T07:26:53.000Z">
-<meta property="article:modified_time" content="2022-10-31T02:07:30.277Z">
+<meta property="article:modified_time" content="2022-11-04T01:37:21.315Z">
 <meta property="article:author" content="Liodb">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221001151143467.png">
   
     <link rel="alternate" href="/Blog/atom.xml" title="Liodb&#39;s Blog" type="application/atom+xml">
   
@@ -103,7 +103,7 @@
 <li>此外，语义解析应用程序只利用生成的逻辑形式作为检索答案的中间步骤。然而，生成逻辑形式会带来困难，例如保持足够表达性，服从解码约束等。</li>
 </ul>
 <p>在本文中，我们提出了<strong>Tapas</strong>（表解析器），一个弱监督的问题回答模型，它对表进行推理，而不生成逻辑形式。因此，它可以从自然语言中学习操作，而不需要以形式主义来指定。</p>
-<h1 id="2-TAPAS-Model"><a href="#2-TAPAS-Model" class="headerlink" title="2 TAPAS Model"></a>2 TAPAS Model</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png" alt="图1 模型架构"></p>
+<h1 id="2-TAPAS-Model"><a href="#2-TAPAS-Model" class="headerlink" title="2 TAPAS Model"></a>2 TAPAS Model</h1><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221001151143467.png" alt="图1 模型架构"></p>
 <p><strong>模型整体介绍</strong></p>
 <ul>
 <li>本模型基于BERT的编码器，并添加了额外的位置嵌入来编码表型结构</li>
@@ -155,7 +155,7 @@
 </ol>
 </li>
 </ul>
-<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png" alt="image-20221002163526787"  /></p>
+<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221002163526787.png" alt="image-20221002163526787"  /></p>
 <p>另外，TAPAS把Table QA问题分为了三类： </p>
 <ol>
 <li><p>cell selection：可以通过选择表中若干单元格解决问题</p>

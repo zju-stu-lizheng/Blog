@@ -14,18 +14,18 @@
 <meta property="og:site_name" content="Liodb&#39;s Blog">
 <meta property="og:description" content="论文：TURL: Table Understanding through Representation Learning (arxiv.org) code：“TURL: Table Understanding through Representation Learning” (github.com)  词汇表征： Word representation  输入嵌入： Input Embeddin">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003104405815.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103011274.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103852274.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004141907578.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142233502.png">
-<meta property="og:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142739816.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004113228214.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221003104405815.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004103011274.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004103852274.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004141907578.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004142233502.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004142739816.png">
 <meta property="article:published_time" content="2022-10-30T07:26:53.000Z">
-<meta property="article:modified_time" content="2022-10-31T02:18:41.392Z">
+<meta property="article:modified_time" content="2022-11-04T01:37:05.624Z">
 <meta property="article:author" content="Liodb">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004113228214.png">
   
     <link rel="alternate" href="/Blog/atom.xml" title="Liodb&#39;s Blog" type="application/atom+xml">
   
@@ -103,7 +103,7 @@
 <p><strong>词汇表征</strong>： Word representation </p>
 <p><strong>输入嵌入</strong>： Input Embedding</p>
 <p><strong>关系Web表</strong>：relational Web table，指在HTML代码的帮助下展现在网络上的具有行列结构的表格。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png" alt="关系Web表示例图"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004113228214.png" alt="关系Web表示例图"></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>在本文中，我们提出了<strong>TURL</strong>，一个新的框架，它引入了关系Web表的预训练/微调范式。</p>
 <p>在预训练期间，我们的框架以一种无监督的方式学习关系Web表上的深度上下文表征。它的通用模型设计与预训练的表征可凭借最小的任务特定的微调应用于广泛的任务。</p>
 <p>具体来说，我们提出了一个【结构感知】（Structure-aware）的Transformer编码器来建模关系Web表的行-列结构，并提出了一个新的掩蔽实体恢复（MER）预训练目标，以捕获大规模未标记数据中的语义和知识。</p>
@@ -130,7 +130,7 @@
 <li>我们提出了一种结构感知的变压器编码器来建模关系Web表中的结构信息。我们还提出了一个新的屏蔽实体恢复（MER）预训练目标，以学习关系Web表中的语义和关于实体的事实知识。</li>
 <li>为了促进这个方向的研究，我们提出了一个包含6个不同任务的表解释和增强的基准。</li>
 </ol>
-<h1 id="2-Preliminary"><a href="#2-Preliminary" class="headerlink" title="2 Preliminary"></a>2 Preliminary</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003104405815.png" alt="表1 符号表"></p>
+<h1 id="2-Preliminary"><a href="#2-Preliminary" class="headerlink" title="2 Preliminary"></a>2 Preliminary</h1><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221003104405815.png" alt="表1 符号表"></p>
 <p>【定义一】给定一个关系Web表语料库，<strong>表征学习任务</strong>旨在以无监督的方式为所有Table caption 𝐶和Header 𝐻以及每个实体中的所有token（例如，所有实体单元𝐸和主题实体$e_t$）学习任务无关的上下文向量表征。</p>
 <h1 id="3-Related-Work"><a href="#3-Related-Work" class="headerlink" title="3 Related Work"></a>3 Related Work</h1><h3 id="Representation-Learning"><a href="#Representation-Learning" class="headerlink" title="Representation Learning"></a>Representation Learning</h3><p><code>Word2Vec</code>等工作在大规模文档上预训练分布式<strong>词汇表征</strong>，而词汇表征被广泛应用在<strong>输入嵌入</strong>中并取得了比随机初始化更优秀的表现。</p>
 <p>然而潜在的一词多义问题，即在不同语境中模拟不同的词汇使用，激发了<strong>上下文化词汇表征</strong>的发展。</p>
@@ -170,7 +170,7 @@
 </ol>
 <p>基于此，我们编译了一个更大的基准测试，包括<strong>表解释</strong>和<strong>表扩充</strong>任务。</p>
 <hr>
-<h1 id="4-Methodology"><a href="#4-Methodology" class="headerlink" title="4 Methodology"></a>4 Methodology</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103011274.png" alt="图1 TURL 概览图"></p>
+<h1 id="4-Methodology"><a href="#4-Methodology" class="headerlink" title="4 Methodology"></a>4 Methodology</h1><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004103011274.png" alt="图1 TURL 概览图"></p>
 <p>在本节中，我们将介绍<strong>TURL</strong>的框架，该框架可以在关系表上进行无监督表征学习。</p>
 <p>首先，<strong>TURL</strong>将在无标签的关系Web表语料库上预训练，以学习单词的语义以及实体之间的关系知识。之后只需要进行微调即可满足各种下游任务。</p>
 <h3 id="4-1-Model-Architecture"><a href="#4-1-Model-Architecture" class="headerlink" title="4.1 Model Architecture"></a>4.1 Model Architecture</h3><p>如概览图所示，<strong>TURL</strong>由三个模块组成：</p>
@@ -179,7 +179,7 @@
 <li>捕获文本信息以及关系知识的N个堆叠的结构感知Transformer编码器</li>
 <li>用作预训练目标的投影层</li>
 </ol>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103852274.png" alt="图2 模型关于输入输出的演示"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004103852274.png" alt="图2 模型关于输入输出的演示"></p>
 <h3 id="4-2-Embedding-Layer"><a href="#4-2-Embedding-Layer" class="headerlink" title="4.2 Embedding Layer"></a>4.2 Embedding Layer</h3><p>如图2所示，分别对token和entity进行编码。</p>
 <ul>
 <li>token的表征为三项之和：<ul>
@@ -197,8 +197,8 @@
 <li>基于Transformer进行改造</li>
 <li>在Multi-Head Self-Attention上增加了<strong>可见性矩阵</strong>（visibility matrix）</li>
 </ul>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004141907578.png" alt="公式"></p>
-<h4 id="Visibility-matrix"><a href="#Visibility-matrix" class="headerlink" title="Visibility matrix"></a>Visibility matrix</h4><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142233502.png" alt="图3 可见性矩阵的图形化描述"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004141907578.png" alt="公式"></p>
+<h4 id="Visibility-matrix"><a href="#Visibility-matrix" class="headerlink" title="Visibility matrix"></a>Visibility matrix</h4><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004142233502.png" alt="图3 可见性矩阵的图形化描述"></p>
 <p>为保持行/列结构，我们需要将位于同一行/同一列的信息关联起来，而不同行不同列的信息互不影响。</p>
 <p>具体来说，就是让$M_{i,j}=1$，当且仅当第j个元素对第i个元素可见。</p>
 <p>构建矩阵的两个规则：</p>
@@ -207,7 +207,7 @@
 <li>如果元素i与元素j是位于同一列或同一行的token或者entity，$M_{i,j}=1$</li>
 </ul>
 <p>一个例子：</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142739816.png" alt="图4 使用可见性矩阵的自注意演示"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004142739816.png" alt="图4 使用可见性矩阵的自注意演示"></p>
 <blockquote>
 <p>注：使用线段连接起来的token或entity是互相可见的</p>
 </blockquote>

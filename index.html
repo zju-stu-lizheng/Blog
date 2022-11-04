@@ -99,7 +99,7 @@
 <li>设计了三个渐进的预训练目标，以实现在token、cell和table级别上的表示</li>
 </ol>
 <h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>不同于自然语言文本，表格通常以二维矩阵的形式组织单元格，并且具有诸如边界、合并、对齐、粗体等风格的格式，以下是四种不同风格的表格：</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221005230454553.png" alt="图1 四种不同风格的表格"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221005230454553.png" alt="图1 四种不同风格的表格"></p>
 <p>表理解任务包括实体链接、列类型标识、回答表上的自然语言问题以及为表生成数据分析。然而目前的工作只聚焦在关系表上，这些关系表只占一般web表的0.9%。这导致了前沿表理解技术和各种结构的现实世界表之间的很大的差距。</p>
 <ul>
 <li>诸多尝试通过识别表的层次结构和单元格类型，从各种结构化的表中提取关系数据。不过，为结构化信息打标签是件非常耗时费力的事，<strong>标签短缺</strong>给机器学习方法带来了巨大挑战。</li>
@@ -147,13 +147,12 @@
 <li>设计三个预训练目标，逐步学习token、cell和table级别的表征。</li>
 </ol>
 <h3 id="3-1-Vocabulary-construction"><a href="#3-1-Vocabulary-construction" class="headerlink" title="3.1 Vocabulary construction"></a>3.1 Vocabulary construction</h3><p>与NL文档中的长文本不同，表格中的单元格字符串通常具有较短的长度和简洁的含义，构成了与NL文档中的非常不同的单词分布。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221006233201970.png" alt="image-20221006233201970"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221006233201970.png" alt="image-20221006233201970"></p>
 <p>我们使用WordPiece模型构建了第一个表的专用词汇表，除了已经在BERT中的令牌之外，还获得了9,754个新令牌。</p>
 <h3 id="3-2-Embedding-layer"><a href="#3-2-Embedding-layer" class="headerlink" title="3.2 Embedding layer"></a>3.2 Embedding layer</h3><p>嵌入信息来自多个部分：in-table $E_{t_pos}$,in-cell $E_{c_pos}$,token semantics $E_{tok}$,numerical properties $E_{num}$,formatting features $E_{fmt}$</p>
 <h4 id="In-table-position"><a href="#In-table-position" class="headerlink" title="In-table position"></a>In-table position</h4><ul>
 <li>对于不同深度的树获得统一长度的坐标，我们将top/left tree坐标扩展到预定义的最大长度<strong>L</strong></li>
 </ul>
-<p><img src="TUTA.assets/image-20221007112457908.png" alt="TUTA概览图"></p>
 <hr>
 <h2 id="3-3-Tree-attention"><a href="#3-3-Tree-attention" class="headerlink" title="3.3 Tree attention"></a>3.3 Tree attention</h2><p>基于bi-tree坐标和距离，我们提出了<strong>基于树的attention</strong>。</p>
 <blockquote>
@@ -161,7 +160,7 @@
 <p>对于局部的cell而言，空间信息和层次化信息对<strong>去芜存菁</strong>非常重要。</p>
 </blockquote>
 <p>我们的目标就是设计一种结构感知的注意力机制。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221025211705024.png" alt="TUTA架构"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221025211705024.png" alt="TUTA架构"></p>
 <p>结构感知的实现也很简单，就是添加一个可见性矩阵来实现masked attention：</p>
 <script type="math/tex; mode=display">
 BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一个对称矩阵，对于第i个token $tok_i$与它的邻域$SN_i$，当$tok_j \in SN_i$，设置$M_{i,j}=1$，否则$M_{i,j}=0$。邻域的定义是通过tree distance和一个预定义的阈值D得到的，当tree distance小于D认为两个cell是相邻的。</p>
@@ -172,7 +171,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <li>Table context retrieval（TCR)：对表上下文是否相关的判断。</li>
 </ol>
 <script type="math/tex; mode=display">
-\mathcal{L} = \mathcal{L_{mlm}}+\mathcal{L_{clc}}+\mathcal{L_{tcr}}</script><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221025213518065.png" alt="预训练任务示例"></p>
+\mathcal{L} = \mathcal{L_{mlm}}+\mathcal{L_{clc}}+\mathcal{L_{tcr}}</script><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221025213518065.png" alt="预训练任务示例"></p>
 
       
     </div>
@@ -216,7 +215,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <p><strong>词汇表征</strong>： Word representation </p>
 <p><strong>输入嵌入</strong>： Input Embedding</p>
 <p><strong>关系Web表</strong>：relational Web table，指在HTML代码的帮助下展现在网络上的具有行列结构的表格。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004113228214.png" alt="关系Web表示例图"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004113228214.png" alt="关系Web表示例图"></p>
 <h1 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h1><p>在本文中，我们提出了<strong>TURL</strong>，一个新的框架，它引入了关系Web表的预训练/微调范式。</p>
 <p>在预训练期间，我们的框架以一种无监督的方式学习关系Web表上的深度上下文表征。它的通用模型设计与预训练的表征可凭借最小的任务特定的微调应用于广泛的任务。</p>
 <p>具体来说，我们提出了一个【结构感知】（Structure-aware）的Transformer编码器来建模关系Web表的行-列结构，并提出了一个新的掩蔽实体恢复（MER）预训练目标，以捕获大规模未标记数据中的语义和知识。</p>
@@ -243,7 +242,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <li>我们提出了一种结构感知的变压器编码器来建模关系Web表中的结构信息。我们还提出了一个新的屏蔽实体恢复（MER）预训练目标，以学习关系Web表中的语义和关于实体的事实知识。</li>
 <li>为了促进这个方向的研究，我们提出了一个包含6个不同任务的表解释和增强的基准。</li>
 </ol>
-<h1 id="2-Preliminary"><a href="#2-Preliminary" class="headerlink" title="2 Preliminary"></a>2 Preliminary</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003104405815.png" alt="表1 符号表"></p>
+<h1 id="2-Preliminary"><a href="#2-Preliminary" class="headerlink" title="2 Preliminary"></a>2 Preliminary</h1><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221003104405815.png" alt="表1 符号表"></p>
 <p>【定义一】给定一个关系Web表语料库，<strong>表征学习任务</strong>旨在以无监督的方式为所有Table caption 𝐶和Header 𝐻以及每个实体中的所有token（例如，所有实体单元𝐸和主题实体$e_t$）学习任务无关的上下文向量表征。</p>
 <h1 id="3-Related-Work"><a href="#3-Related-Work" class="headerlink" title="3 Related Work"></a>3 Related Work</h1><h3 id="Representation-Learning"><a href="#Representation-Learning" class="headerlink" title="Representation Learning"></a>Representation Learning</h3><p><code>Word2Vec</code>等工作在大规模文档上预训练分布式<strong>词汇表征</strong>，而词汇表征被广泛应用在<strong>输入嵌入</strong>中并取得了比随机初始化更优秀的表现。</p>
 <p>然而潜在的一词多义问题，即在不同语境中模拟不同的词汇使用，激发了<strong>上下文化词汇表征</strong>的发展。</p>
@@ -283,7 +282,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 </ol>
 <p>基于此，我们编译了一个更大的基准测试，包括<strong>表解释</strong>和<strong>表扩充</strong>任务。</p>
 <hr>
-<h1 id="4-Methodology"><a href="#4-Methodology" class="headerlink" title="4 Methodology"></a>4 Methodology</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103011274.png" alt="图1 TURL 概览图"></p>
+<h1 id="4-Methodology"><a href="#4-Methodology" class="headerlink" title="4 Methodology"></a>4 Methodology</h1><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004103011274.png" alt="图1 TURL 概览图"></p>
 <p>在本节中，我们将介绍<strong>TURL</strong>的框架，该框架可以在关系表上进行无监督表征学习。</p>
 <p>首先，<strong>TURL</strong>将在无标签的关系Web表语料库上预训练，以学习单词的语义以及实体之间的关系知识。之后只需要进行微调即可满足各种下游任务。</p>
 <h3 id="4-1-Model-Architecture"><a href="#4-1-Model-Architecture" class="headerlink" title="4.1 Model Architecture"></a>4.1 Model Architecture</h3><p>如概览图所示，<strong>TURL</strong>由三个模块组成：</p>
@@ -292,7 +291,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <li>捕获文本信息以及关系知识的N个堆叠的结构感知Transformer编码器</li>
 <li>用作预训练目标的投影层</li>
 </ol>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004103852274.png" alt="图2 模型关于输入输出的演示"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004103852274.png" alt="图2 模型关于输入输出的演示"></p>
 <h3 id="4-2-Embedding-Layer"><a href="#4-2-Embedding-Layer" class="headerlink" title="4.2 Embedding Layer"></a>4.2 Embedding Layer</h3><p>如图2所示，分别对token和entity进行编码。</p>
 <ul>
 <li>token的表征为三项之和：<ul>
@@ -310,8 +309,8 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <li>基于Transformer进行改造</li>
 <li>在Multi-Head Self-Attention上增加了<strong>可见性矩阵</strong>（visibility matrix）</li>
 </ul>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004141907578.png" alt="公式"></p>
-<h4 id="Visibility-matrix"><a href="#Visibility-matrix" class="headerlink" title="Visibility matrix"></a>Visibility matrix</h4><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142233502.png" alt="图3 可见性矩阵的图形化描述"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004141907578.png" alt="公式"></p>
+<h4 id="Visibility-matrix"><a href="#Visibility-matrix" class="headerlink" title="Visibility matrix"></a>Visibility matrix</h4><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004142233502.png" alt="图3 可见性矩阵的图形化描述"></p>
 <p>为保持行/列结构，我们需要将位于同一行/同一列的信息关联起来，而不同行不同列的信息互不影响。</p>
 <p>具体来说，就是让$M_{i,j}=1$，当且仅当第j个元素对第i个元素可见。</p>
 <p>构建矩阵的两个规则：</p>
@@ -320,7 +319,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <li>如果元素i与元素j是位于同一列或同一行的token或者entity，$M_{i,j}=1$</li>
 </ul>
 <p>一个例子：</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221004142739816.png" alt="图4 使用可见性矩阵的自注意演示"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221004142739816.png" alt="图4 使用可见性矩阵的自注意演示"></p>
 <blockquote>
 <p>注：使用线段连接起来的token或entity是互相可见的</p>
 </blockquote>
@@ -374,7 +373,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <li>此外，语义解析应用程序只利用生成的逻辑形式作为检索答案的中间步骤。然而，生成逻辑形式会带来困难，例如保持足够表达性，服从解码约束等。</li>
 </ul>
 <p>在本文中，我们提出了<strong>Tapas</strong>（表解析器），一个弱监督的问题回答模型，它对表进行推理，而不生成逻辑形式。因此，它可以从自然语言中学习操作，而不需要以形式主义来指定。</p>
-<h1 id="2-TAPAS-Model"><a href="#2-TAPAS-Model" class="headerlink" title="2 TAPAS Model"></a>2 TAPAS Model</h1><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221001151143467.png" alt="图1 模型架构"></p>
+<h1 id="2-TAPAS-Model"><a href="#2-TAPAS-Model" class="headerlink" title="2 TAPAS Model"></a>2 TAPAS Model</h1><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221001151143467.png" alt="图1 模型架构"></p>
 <p><strong>模型整体介绍</strong></p>
 <ul>
 <li>本模型基于BERT的编码器，并添加了额外的位置嵌入来编码表型结构</li>
@@ -426,7 +425,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 </ol>
 </li>
 </ul>
-<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221002163526787.png" alt="image-20221002163526787"  /></p>
+<h3 id="Cell-Selection"><a href="#Cell-Selection" class="headerlink" title="Cell Selection"></a>Cell Selection</h3><h3 id="Scalar-Answer"><a href="#Scalar-Answer" class="headerlink" title="Scalar Answer"></a>Scalar Answer</h3><h3 id="Ambiguous-Answer"><a href="#Ambiguous-Answer" class="headerlink" title="Ambiguous Answer"></a>Ambiguous Answer</h3><p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221002163526787.png" alt="image-20221002163526787"  /></p>
 <p>另外，TAPAS把Table QA问题分为了三类： </p>
 <ol>
 <li><p>cell selection：可以通过选择表中若干单元格解决问题</p>
@@ -505,17 +504,16 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <p>根据数据库使用的底层数据表示模式，表可以使用强类型和规范化内容进行完全结构化</p>
 <h3 id="Masked-Language-Models"><a href="#Masked-Language-Models" class="headerlink" title="Masked Language Models"></a>Masked Language Models</h3><p>给定一个自然语言token序列 x = $x_1,x_2,…,x_n$ ,MLM是一个使用掩蔽语言建模目标进行训练的语言模型。它的目的是从x中的一个【损坏的】通过随机屏蔽x中的某些标记的上下文中恢复原来的标记。</p>
 <h1 id="3-TABERT"><a href="#3-TABERT" class="headerlink" title="3 TABERT"></a>3 TABERT</h1><p>我们首先介绍TABERT如何计算自然语言话语和表模式（3.1），然后描述预训练的过程（3.2)</p>
-<p><img src="TaBERT.assets/image-20220930151436739.png" alt="image-20220930151436739"></p>
 <h2 id="3-1-Computing-Representations"><a href="#3-1-Computing-Representations" class="headerlink" title="3.1 Computing Representations"></a>3.1 Computing Representations</h2><h3 id="3-1-1-Content-snapshot"><a href="#3-1-1-Content-snapshot" class="headerlink" title="3.1.1 Content snapshot"></a>3.1.1 Content snapshot</h3><p>给定一个语句 u (<em>In which city did Piotr’s last 1st place finish occur?</em>)和一个表 T，首先创建一个内容快照，如图1所示。</p>
 <p>这个快照由采样的行组成，这些行总结了T中与输入话语最相关的信息。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20220930134402290.png" alt="图1 针对输入表的一个内容快照"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20220930134402290.png" alt="图1 针对输入表的一个内容快照"></p>
 <p>为了减少计算开销，我们选择与输入话语最相关的几行作为内容快照。采用的策略是<strong>基于n-gram的字符匹配率</strong>，<strong>选取Top-K</strong>，K的选取由查询文本与表格数据决定，在本文中选取$n\le3$。</p>
 <h3 id="3-1-2-Linearization"><a href="#3-1-2-Linearization" class="headerlink" title="3.1.2 Linearization"></a>3.1.2 Linearization</h3><p>然后，该模型将快照中的每一行线性化，将每个线性化的行与话语连接起来，并使用连接的字符串作为Transformer（例如，BERT）模型的输入，该模型输出话语标记和单元格的行级编码向量。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20220930135133769.png" alt="图2 逐行编码示意图"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20220930135133769.png" alt="图2 逐行编码示意图"></p>
 <p>具体来说，每个单元格由列的名称和数据类型表示，以及它的实际值，用一个竖条分隔。</p>
 <p>然后，通过连接所有单元格的上述字符串编码，由[SEP]符号分隔。</p>
 <h3 id="3-1-3-Vertical-Self-Attention-Mechanism"><a href="#3-1-3-Vertical-Self-Attention-Mechanism" class="headerlink" title="3.1.3 Vertical Self-Attention Mechanism"></a>3.1.3 Vertical Self-Attention Mechanism</h3><p>这些编码会被输入到一系列垂直的自注意层中，其中，单元格表示（或话语标记表示）是通过关注同一列（或同一自然语言标记）的垂直对齐向量来计算的。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20220930135645288.png" alt="图3 垂直自注意层"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20220930135645288.png" alt="图3 垂直自注意层"></p>
 <p>为了允许信息在不同行的单元格表示之间流动，提出了垂直自注意。</p>
 <p>如图3所示，TABERT有V个堆叠的垂直级的自注意层。为了给垂直自注意层生成对齐的输入，首先为每个单元格计算一个定长初始化向量，计算方法为对Transformer的输出向量序列采用平均值池化。之后，自然语言话语的单词向量序列（来自基本Transformer模型）与该单元的向量连接，作为垂直注意层的初始输入。</p>
 <p>每个垂直注意层具有与Transformer层相同的参数化，但操作对象为垂直对齐的元素。这种垂直的自注意机制使模型能够聚合来自内容快照中不同行的信息，从而允许TABERT捕获对单元格的跨行依赖关系。</p>
@@ -527,7 +525,7 @@ BiTreeAttention(Q,K,V)=Attention(Q,K,V)\cdot M</script><p>其中该矩阵M是一
 <p>对于学习列表示，我们设计了两个目标，其直觉是一个列表示应该包含列的一般信息（例如，它的名称和数据类型），以及与自然语言上下文相关的代表性单元格值。</p>
 <h4 id="Masked-Column-Prediction"><a href="#Masked-Column-Prediction" class="headerlink" title="Masked Column Prediction"></a>Masked Column Prediction</h4><p>掩蔽列预测（MCP）目标鼓励模型恢复掩蔽列的名称和数据类型。</p>
 <h4 id="Cell-Value-Recovery"><a href="#Cell-Value-Recovery" class="headerlink" title="Cell Value Recovery"></a>Cell Value Recovery</h4><p>确保内容快照中有代表性的单元值的信息在内容快照中经过额外的垂直自注意层后被保留。</p>
-<p><img src="https://gitee.com/zjg_lz/pic-go/raw/master/static/image-20221003103634672.png" alt="image-20221003103634672"></p>
+<p><img src="https://raw.githubusercontent.com/zju-stu-lizheng/BlogImage/master/img/image-20221003103634672.png" alt="image-20221003103634672"></p>
 <h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><h3 id="n-gram模型"><a href="#n-gram模型" class="headerlink" title="n-gram模型"></a>n-gram模型</h3><p>N-Gram是一种基于统计语言模型的算法。它的基本思想是将文本里面的内容按照字节进行大小为N的滑动窗口操作，形成了长度是N的字节片段序列。</p>
 
       
